@@ -3,134 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hola Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0a0e1a; --panel: #161b2d; --accent: #7df9ff; --gold: #ffcf40; --danger: #ff3344; --success: #00ff88; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 20px; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 15px; padding-bottom: 50px; }
 
-        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--danger); padding-bottom: 10px; }
-        .header h1 { font-weight: 900; font-size: 20px; color: var(--danger); margin: 0; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid var(--danger); padding-bottom: 10px; }
+        .header h1 { font-weight: 900; font-size: 18px; color: var(--danger); margin: 0; }
 
-        .card { background: var(--panel); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        h3 { margin-top: 0; font-size: 15px; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 15px; }
+        .card { background: var(--panel); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        h3 { margin-top: 0; font-size: 14px; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
 
-        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 12px; font-size: 14px; outline: none; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        input { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 12px; font-size: 14px; outline: none; width: 100%; }
         input:focus { border-color: var(--accent); }
 
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        button:active { transform: scale(0.95); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        button { border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 12px; }
+        button:active { transform: scale(0.96); opacity: 0.8; }
 
-        .btn-prime { background: var(--accent); color: #000; }
-        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-blue { background: var(--accent); color: #000; }
         .btn-gold { background: var(--gold); color: #000; }
+        .btn-red { background: var(--danger); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid #444; color: #fff; }
+        .btn-outline.active { border-color: var(--success); color: var(--success); background: rgba(0,255,136,0.1); }
 
-        .status-feed { height: 150px; background: #000; border-radius: 12px; padding: 10px; font-family: monospace; font-size: 11px; overflow-y: auto; color: var(--success); border: 1px solid #222; }
+        /* Status Feed */
+        #log { height: 120px; background: #000; border-radius: 12px; padding: 10px; font-family: monospace; font-size: 11px; overflow-y: auto; color: var(--success); border: 1px solid #222; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <span>🛡️</span>
-        <h1>HOLA MODERATOR CONTROL</h1>
+        <h1>🛡️ MODERATOR CONTROL</h1>
+        <div id="statusTag" style="font-size: 10px; color: var(--success);">● ONLINE</div>
     </div>
 
     <div class="card">
-        <h3>👤 Хэрэглэгчийн Удирдлага</h3>
+        <h3>👻 Stealth Settings</h3>
+        <p style="font-size: 11px; opacity: 0.6; margin-top: -10px;">Ghost Mode идэвхтэй үед таныг өрөөнд ороход мэдэгдэхгүй.</p>
+        <button id="ghostBtn" class="btn-outline" style="width: 100%;" onclick="toggleGhost()">GHOST MODE: OFF</button>
+    </div>
+
+    <div class="card">
+        <h3>⚡ Live Operations</h3>
+        <div class="grid-2">
+            <button class="btn-gold" onclick="triggerEvent('DIAMOND_RAIN')">💎 DIAMOND RAIN</button>
+            <button class="btn-blue" onclick="triggerEvent('START_PK')">⚔️ START PK</button>
+        </div>
+        <button class="btn-gold" style="width: 100%; margin-top: 10px;" onclick="triggerEvent('SPAWN_BOX')">🎁 SPAWN LUCKY BOX</button>
+    </div>
+
+    <div class="card">
+        <h3>🔑 Secret Box Code</h3>
         <div class="input-group">
-            <input type="text" id="targetUser" placeholder="Хэрэглэгчийн ID (жишээ: user_777)">
-            <input type="number" id="diaAmount" placeholder="Diamond хэмжээ (+/-)">
+            <input type="text" id="secretCode" placeholder="Нууц код (Жишээ: HOLA2026)">
         </div>
-        <div class="btn-row">
-            <button class="btn-prime" onclick="modifyDiamonds()">💰 DIAMOND НЭМЭХ</button>
-            <button class="btn-danger" onclick="banUser()">🚫 BAN ХИЙХ (30м)</button>
-        </div>
+        <button class="btn-blue" style="width: 100%;" onclick="sendSecret()">КОД ИЛГЭЭХ</button>
     </div>
 
     <div class="card">
-        <h3>📢 Систем Зарлал (All Rooms)</h3>
+        <h3>👤 User Management</h3>
         <div class="input-group">
-            <input type="text" id="globalMsg" placeholder="Бүх лайв дээр гарах текст...">
+            <input type="text" id="targetId" placeholder="User ID (Жишээ: User_777)">
+            <input type="number" id="diaAmt" placeholder="Diamond +/-">
         </div>
-        <button class="btn-gold" style="width:100%" onclick="sendGlobalAlert()">🚀 ЗАРЛАЛ ИЛГЭЭХ</button>
+        <div class="grid-2">
+            <button class="btn-blue" onclick="adjustWallet()">💰 GIVE DIA</button>
+            <button class="btn-red" onclick="kickUser()">🚫 BAN USER</button>
+        </div>
+        <button class="btn-outline" style="width: 100%; margin-top: 10px;" onclick="silenceUser()">🤐 SILENCE (1 MIN)</button>
     </div>
 
-    <div class="card">
-        <h3>📺 Лайв Хяналт</h3>
-        <div class="btn-row">
-            <button class="btn-prime" onclick="forceEvent('BATTLE_STARTED')">⚔️ PK ЭХЛҮҮЛЭХ</button>
-            <button class="btn-gold" onclick="forceEvent('SPAWN_BOX')">🎁 ХАЙРЦАГ ТАВИХ</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>📜 Үйл ажиллагааны бүртгэл</h3>
-        <div id="log" class="status-feed">
-            [System] Moderator panel идэвхжлээ...<br>
+    <div class="card" style="margin-bottom: 0;">
+        <h3>📜 Action Logs</h3>
+        <div id="log">
+            [System] Moderator session started...<br>
         </div>
     </div>
 
-    <script src="../js/eventBus.js"></script>
-    <script src="../js/economyEngine.js"></script>
     <script src="../js/adminEngine.js"></script>
+    <script src="../js/economyEngine.js"></script>
 
     <script>
-        function logAction(msg) {
+        function writeLog(msg) {
             const log = document.getElementById('log');
-            const time = new Date().toLocaleTimeString();
-            log.innerHTML += `<span style="color:#666">[${time}]</span> ${msg}<br>`;
+            const now = new Date().toLocaleTimeString();
+            log.innerHTML += `<span style="color:#666">[${now}]</span> ${msg}<br>`;
             log.scrollTop = log.scrollHeight;
         }
 
-        // Diamond нэмэх
-        function modifyDiamonds() {
-            const user = document.getElementById('targetUser').value;
-            const amt = parseInt(document.getElementById('diaAmount').value);
+        // Ghost Mode Toggle
+        function toggleGhost() {
+            const btn = document.getElementById('ghostBtn');
+            const currentState = AdminEngine.settings.isGhostMode;
+            const newState = !currentState;
             
-            if(!user || isNaN(amt)) return alert("Мэдээллээ бүрэн бөглөнө үү!");
-
-            // Хэрэв өөрийнхөө ID-г бичсэн бол шууд economyEngine ашиглана
-            // Бусад хэрэглэгч бол App Bridge-ээр дамжина
-            EconomyEngine.updateWallet(amt);
-            logAction(`SUCCESS: ${user} руу ${amt} 💎 илгээлээ.`);
+            AdminEngine.setGhostMode(newState);
+            btn.className = newState ? 'btn-outline active' : 'btn-outline';
+            btn.innerText = `GHOST MODE: ${newState ? 'ON' : 'OFF'}`;
+            writeLog(`Ghost Mode set to ${newState}`);
         }
 
-        // Ban хийх
-        function banUser() {
-            const user = document.getElementById('targetUser').value;
-            if(!user) return alert("Хэрэглэгчийн ID оруул!");
-
-            AdminEngine.banUser(user, 30); // 30 минут бан
-            logAction(`BANNED: ${user} чат бичих эрх 30 мин хасагдлаа.`);
-            
-            // Бусад файлууд руу мэдээлэх
-            window.parent.postMessage({ 
-                type: 'USER_BANNED', 
-                userId: user, 
-                minutes: 30 
-            }, '*');
-        }
-
-        // Нийтийн зарлал
-        function sendGlobalAlert() {
-            const msg = document.getElementById('globalMsg').value;
-            if(!msg) return;
-
-            window.parent.postMessage({ 
-                type: 'SYSTEM_ALERT', 
-                message: msg 
-            }, '*');
-
-            logAction(`GLOBAL: "${msg}" зарлал илгээв.`);
-            document.getElementById('globalMsg').value = '';
-        }
-
-        // Лайв үйл явдал албадах
-        function forceEvent(type) {
+        // Global Event Trigger
+        function triggerEvent(type) {
             window.parent.postMessage({ type: type }, '*');
-            logAction(`TRIGGER: ${type} үйл явдал эхэллээ.`);
+            writeLog(`Triggered: ${type}`);
         }
+
+        // Send Secret Box Code
+        function sendSecret() {
+            const code = document.getElementById('secretCode').value;
+            if(!code) return alert("Код оруулна уу!");
+            
+            window.parent.postMessage({ type: 'SPAWN_SECRET', code: code }, '*');
+            writeLog(`Secret Box sent with code: ${code}`);
+            document.getElementById('secretCode').value = '';
+        }
+
+        // Adjust Wallet
+        function adjustWallet() {
+            const id = document.getElementById('targetId').value;
+            const amt = parseInt(document.getElementById('diaAmt').value);
+            if(!id || isNaN(amt)) return alert("ID болон хэмжээг оруул!");
+
+            // Хэрэв өөрийнхөө ID бол шууд нэмнэ, үгүй бол системээр дамжуулна
+            EconomyEngine.updateWallet(amt);
+            writeLog(`Added ${amt} diamonds to ${id}`);
+        }
+
+        // Silence User (Stream Sniper Logic)
+        function silenceUser() {
+            const id = document.getElementById('targetId').value;
+            if(!id) return alert("User ID оруул!");
+
+            AdminEngine.silenceUser(id);
+            window.parent.postMessage({ type: 'USER_SILENCED', userId: id }, '*');
+            writeLog(`User ${id} silenced for 60 seconds`);
+        }
+
+        // Ban User
+        function kickUser() {
+            const id = document.getElementById('targetId').value;
+            if(!id) return alert("User ID оруул!");
+
+            AdminEngine.banUser(id, 30); // 30 min ban
+            writeLog(`User ${id} banned for 30 minutes`);
+        }
+
+        // Initialize state on load
+        window.onload = () => {
+            const isGhost = AdminEngine.settings.isGhostMode;
+            const btn = document.getElementById('ghostBtn');
+            if(isGhost) {
+                btn.className = 'btn-outline active';
+                btn.innerText = 'GHOST MODE: ON';
+            }
+        };
     </script>
 </body>
 </html>
