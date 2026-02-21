@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #05070f; --accent: #7df9ff; --gold: #ffcf40; --panel: #0d1224; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 20px; text-align: center; }
+        
+        .invite-card { background: var(--panel); border-radius: 25px; padding: 30px; border: 1px solid rgba(125,249,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .gift-icon { font-size: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--accent)); }
+        h1 { font-weight: 900; font-size: 24px; margin-bottom: 10px; }
+        p { font-size: 14px; opacity: 0.7; line-height: 1.5; margin-bottom: 30px; }
+
+        .code-box { 
+            background: rgba(255,255,255,0.05); border: 2px dashed var(--accent); 
+            padding: 15px; border-radius: 15px; font-size: 24px; font-weight: 900; 
+            letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; position: relative;
+        }
+        
+        .copy-btn { 
+            background: var(--accent); color: #000; border: none; padding: 15px 30px; 
+            border-radius: 15px; font-weight: 900; width: 100%; cursor: pointer; font-size: 16px;
+            transition: 0.3s;
+        }
+        .copy-btn:active { transform: scale(0.95); }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
+        .stat-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; }
+        .stat-num { display: block; font-size: 18px; font-weight: 900; color: var(--gold); }
+        .stat-label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="invite-card">
+        <div class="gift-icon">🎁</div>
+        <h1>Найзаа уриад 500 💎 ав!</h1>
+        <p>Таны найз таны кодоор бүртгүүлж лайв үзэх бүрт танд болон таны найзад урамшуулал орох болно.</p>
+
+        <div class="code-box" id="inviteCode">HOLA-777</div>
+        <button class="copy-btn" onclick="copyInvite()">КОД ХУУЛАХ & ХУВААЛЦАХ</button>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-num" id="invitedCount">12</span>
+                <span class="stat-label">Урьсан найз</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" id="earnedDiamonds">6,000</span>
+                <span class="stat-label">Олсон орлого</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/economyEngine.js"></script>
+    <script>
+        // Unique Code Generator
+        window.onload = () => {
+            let code = localStorage.getItem('my_invite_code');
+            if(!code) {
+                code = 'HOLA-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+                localStorage.setItem('my_invite_code', code);
+            }
+            document.getElementById('inviteCode').innerText = code;
+        };
+
+        function copyInvite() {
+            const code = document.getElementById('inviteCode').innerText;
+            const text = `Hola Live-д намайг дагаарай! Миний урилгын код: ${code} . Ороод 500 Diamond бэлгэнд аваарай! https://hola-live.com`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Урилгын холбоос хуулагдлаа! Одоо найзууд руугаа илгээ.");
+            });
+        }
+    </script>
+</body>
+</html>
