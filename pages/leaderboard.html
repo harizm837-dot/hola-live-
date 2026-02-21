@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; --gold: #ffcf40; --silver: #c0c0c0; --bronze: #cd7f32; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: #fff; padding: 20px; }
+        
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .title-section h1 { font-family: 'Montserrat'; font-size: 28px; margin: 0; background: linear-gradient(var(--gold), #ff9900); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Podium (Top 3) */
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin-bottom: 40px; height: 200px; }
+        .podium-item { background: var(--panel); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; width: 100px; }
+        .p-1 { height: 100%; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(255,207,64,0.2); }
+        .p-2 { height: 80%; border: 2px solid var(--silver); }
+        .p-3 { height: 70%; border: 2px solid var(--bronze); }
+        
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #2a2f45; margin-bottom: 10px; border: 2px solid #fff; }
+        .rank-badge { position: absolute; top: -15px; font-size: 24px; }
+        
+        /* List (4-30) */
+        .rank-list { background: var(--panel); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .rank-row { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .rank-num { width: 40px; font-weight: 900; color: #8a99ad; }
+        .user-name { flex: 1; font-weight: 700; }
+        .user-amount { color: var(--accent); font-weight: 800; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="title-section">
+        <h1>DONATION KINGS</h1>
+        <p style="font-size: 12px; color: #8a99ad;">Нийт бэлэг өгсөн дүнгээр</p>
+    </div>
+
+    <div class="podium">
+        <div class="podium-item p-2">
+            <span class="rank-badge">🥈</span>
+            <div class="avatar"></div>
+            <span style="font-size: 12px; font-weight: 800;">Boldoo</span>
+            <span style="font-size: 10px; color: var(--accent);">850k 💎</span>
+        </div>
+        <div class="podium-item p-1">
+            <span class="rank-badge">👑</span>
+            <div class="avatar"></div>
+            <span style="font-size: 12px; font-weight: 800;">Saruul</span>
+            <span style="font-size: 10px; color: var(--accent);">1.2M 💎</span>
+        </div>
+        <div class="podium-item p-3">
+            <span class="rank-badge">🥉</span>
+            <div class="avatar"></div>
+            <span style="font-size: 12px; font-weight: 800;">Tuvsho</span>
+            <span style="font-size: 10px; color: var(--accent);">500k 💎</span>
+        </div>
+    </div>
+
+    <div class="rank-list" id="rankList">
+        </div>
+
+    <script>
+        const list = document.getElementById('rankList');
+        for(let i=4; i<=30; i++) {
+            list.innerHTML += `
+                <div class="rank-row">
+                    <div class="rank-num">${i}</div>
+                    <div class="user-name">User_Account_${i}</div>
+                    <div class="user-amount">${Math.floor(Math.random()*100000).toLocaleString()} 💎</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
