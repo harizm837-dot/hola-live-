@@ -2,59 +2,140 @@
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Hola Live | Stream Next Gen</title>
-    <link rel="stylesheet" href="assets/css/global.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hola Live | Next-Gen Streaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        canvas { position: absolute; z-index: 1; }
-        .hero { position: relative; z-index: 10; text-align: center; }
-        .tagline { letter-spacing: 5px; font-size: 12px; opacity: 0.7; margin-bottom: 30px; }
-        footer { 
-            position: fixed; bottom: 20px; font-size: 10px; opacity: 0.4; 
-            letter-spacing: 1px; width: 100%; text-align: center; 
+        :root {
+            --primary: #7df9ff; /* Electric Blue */
+            --secondary: #ff0055; /* Hot Pink */
+            --gold: #ffcf40;
+            --dark: #05070f;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Арын дэвсгэрийн гэрлэн эффект */
+        .bg-glow {
+            position: absolute; width: 300px; height: 300px;
+            background: var(--primary);
+            filter: blur(150px); opacity: 0.2;
+            z-index: -1; top: 20%; left: 10%;
+            animation: move 10s infinite alternate;
+        }
+        .bg-glow-2 {
+            position: absolute; width: 300px; height: 300px;
+            background: var(--secondary);
+            filter: blur(150px); opacity: 0.2;
+            z-index: -1; bottom: 20%; right: 10%;
+            animation: move 12s infinite alternate-reverse;
+        }
+        @keyframes move { from { transform: translate(0,0); } to { transform: translate(100px, 50px); } }
+
+        /* Logo & Hero Section */
+        .hero { z-index: 10; padding: 20px; }
+        
+        .logo-main {
+            font-size: 80px; font-weight: 900; letter-spacing: -4px;
+            background: linear-gradient(to bottom, #fff, var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 10px; animation: scaleUp 0.8s ease-out;
+        }
+        @keyframes scaleUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .slogan { font-size: 16px; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
+
+        /* Card Menu */
+        .card-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            width: 90%; max-width: 400px; margin-top: 20px;
+        }
+
+        .action-card {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 25px 15px; border-radius: 24px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; text-decoration: none; color: #fff;
+        }
+        .action-card:active { transform: scale(0.9); border-color: var(--primary); }
+        .action-card i { font-size: 30px; display: block; margin-bottom: 10px; }
+        .action-card b { font-size: 14px; font-weight: 900; }
+
+        /* Enter Button */
+        .btn-enter {
+            margin-top: 40px; width: 280px; padding: 18px;
+            background: #fff; color: #000; border-radius: 40px;
+            font-weight: 900; font-size: 18px; border: none;
+            box-shadow: 0 10px 30px rgba(125,249,255,0.4);
+            transition: 0.3s; cursor: pointer;
+        }
+        .btn-enter:active { transform: scale(0.95); background: var(--primary); }
+
+        /* Floating Elements */
+        .float-info {
+            position: absolute; bottom: 30px; font-size: 12px; opacity: 0.4;
+            width: 100%; letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
     <div class="hero">
-        <h1 class="logo" style="font-size: 60px; margin-bottom: 10px;">Hola Live</h1>
-        <div class="tagline">STREAM • TOKEN • STATUS</div>
-        <button class="btn-primary" onclick="enterApp()">НЭВТРЭХ</button>
+        <h1 class="logo-main">HOLA</h1>
+        <p class="slogan">Streaming into the future</p>
     </div>
 
-    <footer>© 2026 Hola Live. Бүх эрх хуулиар хамгаалагдсан.</footer>
+    <div class="card-container">
+        <a href="app.html" class="action-card">
+            <i>📱</i>
+            <b>ENTER APP</b>
+        </a>
+        <a href="pages/store.html" class="action-card">
+            <i>💎</i>
+            <b>GET COINS</b>
+        </a>
+        <div class="action-card" onclick="alert('Coming Soon!')">
+            <i>🏆</i>
+            <b>RANKING</b>
+        </div>
+        <div class="action-card" onclick="alert('Join 24/7 Support')">
+            <i>🎧</i>
+            <b>SUPPORT</b>
+        </div>
+    </div>
+
+    <button class="btn-enter" onclick="window.location.href='app.html'">START JOURNEY</button>
+
+    <div class="float-info">
+        VERSION 3.0.1 • POWERED BY HOLA ENGINE
+    </div>
 
     <script>
-        function enterApp() {
-            document.body.style.opacity = '0';
-            document.body.style.transition = '0.8s';
-            setTimeout(() => { window.location.href = 'app.html'; }, 800);
-        }
-
-        // Background 3D Animation
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        const geometry = new THREE.IcosahedronGeometry(2, 1);
-        const material = new THREE.MeshStandardMaterial({ color: 0x00f2ff, wireframe: true });
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
-        scene.add(new THREE.AmbientLight(0xffffff, 1));
-        camera.position.z = 5;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            sphere.rotation.y += 0.005;
-            sphere.rotation.x += 0.002;
-            renderer.render(scene, camera);
-        }
-        animate();
+        // Энгийн нэгэн эффект: Хөдөлгөхөд гэрэл дагах
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            document.querySelector('.bg-glow').style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+        });
     </script>
 </body>
 </html>
