@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #05070f; --panel: #12182b; --accent: #7df9ff; --gold: #ffcf40; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: #fff; padding: 20px; }
+        
+        .profile-header { text-align: center; padding: 30px; background: linear-gradient(to bottom, #1a1f35, var(--bg)); border-radius: 30px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .streamer-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); margin-bottom: 15px; }
+        .streamer-rank { background: var(--gold); color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
+
+        .stats-bar { display: flex; justify-content: space-around; margin: 25px 0; }
+        .stat-item { text-align: center; }
+        .stat-val { display: block; font-size: 18px; font-weight: 900; color: var(--accent); }
+        .stat-lbl { font-size: 11px; color: #8a99ad; }
+
+        .top-fans-card { background: var(--panel); border-radius: 24px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .card-title { font-weight: 900; font-size: 16px; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        
+        .fan-row { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .fan-rank { font-weight: 900; width: 20px; color: var(--gold); }
+        .fan-name { flex: 1; font-weight: 600; font-size: 14px; }
+        .fan-level { background: rgba(125, 249, 255, 0.1); color: var(--accent); padding: 2px 8px; border-radius: 5px; font-size: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <img src="https://picsum.photos/id/64/200" class="streamer-avatar">
+        <h2 style="margin: 5px 0;">Anu_B</h2>
+        <span class="streamer-rank">💎 Diamond Streamer</span>
+        
+        <div class="stats-bar">
+            <div class="stat-item"><span class="stat-val">2.4M</span><span class="stat-lbl">Нийт Бэлэг</span></div>
+            <div class="stat-item"><span class="stat-val">45k</span><span class="stat-lbl">Дагагчид</span></div>
+            <div class="stat-item"><span class="stat-val">120</span><span class="stat-lbl">Лайв</span></div>
+        </div>
+    </div>
+
+    <div class="top-fans-card">
+        <div class="card-title">🏆 Top 10 Fans <span>(Нийт)</span></div>
+        <div id="fanList">
+            </div>
+    </div>
+
+    <script>
+        const fans = [
+            { name: "Bat-Erdene", amount: "500k", lvl: "Lv.99" },
+            { name: "Sola_MGL", amount: "420k", lvl: "Lv.85" },
+            { name: "GamerBoy", amount: "300k", lvl: "Lv.72" },
+            { name: "Misheel", amount: "250k", lvl: "Lv.60" },
+            { name: "Oggi", amount: "180k", lvl: "Lv.55" }
+        ];
+
+        const fList = document.getElementById('fanList');
+        fans.forEach((f, i) => {
+            fList.innerHTML += `
+                <div class="fan-row">
+                    <div class="fan-rank">${i+1}</div>
+                    <div class="fan-name">${f.name} <span style="font-size:10px; opacity:0.5; margin-left:10px;">${f.amount} 💎</span></div>
+                    <div class="fan-level">${f.lvl}</div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
