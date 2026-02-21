@@ -3,249 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Hola Live | Pro Streaming Room</title>
+    <title>Hola Live - Ultimate Room</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --accent: #7df9ff; --gold: #ffcf40; --danger: #ff0055; 
-            --blue: #0055ff; --panel: rgba(0, 0, 0, 0.4); 
+        :root { --accent: #7df9ff; --gold: #ffcf40; --danger: #ff0055; --blue: #0055ff; }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; height: 100vh; color: #fff; overflow: hidden; display: flex; flex-direction: column; }
+
+        /* --- STREAM VIEWPORT --- */
+        .viewport { flex: 1; position: relative; background: #05070f; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .stream-bg { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+
+        /* --- DIAMOND RAIN --- */
+        .rain-diamond {
+            position: absolute; font-size: 35px; cursor: pointer; z-index: 1000;
+            animation: diamondFall 3s linear forwards; user-select: none;
+            filter: drop-shadow(0 0 10px var(--accent));
+        }
+        @keyframes diamondFall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
         }
 
-        body { 
-            margin: 0; font-family: 'Inter', sans-serif; background: #000; 
-            height: 100vh; color: #fff; overflow: hidden; display: flex; flex-direction: column; 
-        }
-
-        /* --- STREAM DISPLAY --- */
-        .video-viewport { 
-            flex: 1; position: relative; background: #05070f; 
-            display: flex; align-items: center; justify-content: center;
-        }
-        .stream-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-
-        /* --- PK BATTLE SYSTEM --- */
+        /* --- PK BATTLE UI --- */
         #pkOverlay {
-            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
             width: 90%; z-index: 100; display: none;
         }
-        .pk-timer { text-align: center; font-weight: 900; color: var(--gold); font-size: 12px; margin-bottom: 4px; text-shadow: 0 2px 4px #000; }
-        .pk-track { 
-            height: 24px; background: #222; border-radius: 12px; overflow: hidden; 
-            display: flex; border: 2px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative;
+        .pk-track {
+            height: 24px; background: #222; border-radius: 12px; overflow: hidden;
+            display: flex; border: 2px solid #fff; position: relative;
         }
-        #pkLeft { height: 100%; background: linear-gradient(90deg, var(--danger), #ff8800); width: 50%; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; padding-left: 10px; font-weight: 900; font-size: 11px; }
-        #pkRight { flex: 1; background: linear-gradient(90deg, var(--blue), #00d4ff); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-weight: 900; font-size: 11px; }
-        .vs-tag { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #fff; color: #000; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; }
+        #pkL { height: 100%; background: linear-gradient(90deg, var(--danger), #ff8800); width: 50%; transition: width 0.5s ease; display: flex; align-items: center; padding-left: 10px; font-weight: 900; font-size: 11px; }
+        #pkR { flex: 1; background: linear-gradient(90deg, var(--blue), #00d4ff); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-weight: 900; font-size: 11px; }
 
-        /* --- ENTRY EFFECTS (Dragon, Rocket, Car) --- */
+        /* --- AURA & STREAMER INFO --- */
+        .streamer-box { position: absolute; top: 20px; left: 15px; display: flex; gap: 10px; align-items: center; z-index: 10; background: rgba(0,0,0,0.4); padding: 5px 12px; border-radius: 30px; backdrop-filter: blur(10px); }
+        .pfp-wrap { position: relative; width: 35px; height: 35px; }
+        .pfp { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff; }
+        .aura-fire { position: absolute; inset: -5px; border-radius: 50%; border: 3px solid var(--gold); animation: auraPulse 1.5s infinite; box-shadow: 0 0 15px var(--gold); }
+        @keyframes auraPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+
+        /* --- ENTRY ANIMATION --- */
         #entryCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 500; display: flex; align-items: center; justify-content: center; }
-        
-        .entry-anim { animation: entryIn 3s ease-in-out forwards; text-align: center; }
-        .entry-icon { font-size: 80px; filter: drop-shadow(0 0 20px var(--gold)); }
-        .entry-name { font-weight: 900; font-size: 22px; color: #fff; text-shadow: 0 0 10px var(--accent); margin-top: 10px; text-transform: uppercase; }
-
-        @keyframes entryIn {
-            0% { transform: translateY(600px) scale(0.5); opacity: 0; }
-            30% { transform: translateY(0) scale(1.2); opacity: 1; }
-            70% { transform: translateY(0) scale(1.2); opacity: 1; }
-            100% { transform: translateY(-600px) scale(0.5); opacity: 0; }
+        .entry-vfx { animation: entryMove 3s ease-in-out forwards; text-align: center; }
+        @keyframes entryMove {
+            0% { transform: scale(0) translateY(500px); opacity: 0; }
+            30% { transform: scale(1.2) translateY(0); opacity: 1; }
+            70% { transform: scale(1.2) translateY(0); opacity: 1; }
+            100% { transform: scale(0) translateY(-500px); opacity: 0; }
         }
 
-        /* --- LUCKY BOX --- */
-        #luckyBox {
-            position: absolute; font-size: 50px; cursor: pointer; z-index: 200;
-            display: none; animation: bounce 0.5s infinite alternate; filter: drop-shadow(0 0 15px var(--gold));
+        /* --- SECRET BOX MODAL --- */
+        #secretModal {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(13, 18, 36, 0.95); padding: 25px; border-radius: 20px;
+            border: 2px solid var(--accent); display: none; z-index: 2000; text-align: center; width: 80%;
         }
-        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.2); } }
+        #secretModal input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: none; background: #000; color: #fff; text-align: center; font-weight: 900; letter-spacing: 3px; }
 
-        /* --- CHAT SECTION --- */
-        #chatDisplay { 
-            height: 35vh; background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
-            padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
-        }
-        .chat-line { background: rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 12px; font-size: 13px; max-width: 85%; border-left: 3px solid var(--accent); animation: fadeIn 0.3s forwards; }
-        .chat-line b { color: var(--accent); }
-        .chat-line.vip { border-left-color: var(--gold); background: rgba(255, 207, 64, 0.1); }
-        .chat-line.admin { border-left-color: var(--danger); background: rgba(255, 0, 85, 0.15); font-weight: 700; }
+        /* --- CHAT SYSTEM --- */
+        #chatArea { height: 35vh; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .chat-msg { background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 12px; font-size: 13px; animation: slideIn 0.3s forwards; position: relative; display: flex; align-items: center; justify-content: space-between; }
+        .chat-msg b { color: var(--accent); }
+        .chat-msg.vip b { color: var(--gold); }
+        .silence-btn { background: var(--danger); border: none; color: #fff; font-size: 9px; padding: 3px 7px; border-radius: 5px; cursor: pointer; display: none; }
 
         /* --- CONTROLS --- */
-        .action-bar { padding: 10px; display: flex; gap: 8px; background: #000; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-        .chat-input { flex: 1; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px 18px; border-radius: 25px; outline: none; font-size: 14px; }
-        .gift-btn { background: var(--gold); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; }
-        .send-btn { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; }
-
-        /* GIFTS PANEL */
-        #giftPanel {
-            position: absolute; bottom: 0; left: 0; right: 0; background: #0d1224; 
-            border-top-left-radius: 25px; border-top-right-radius: 25px; 
-            padding: 20px; display: none; z-index: 1000;
-        }
-        .gift-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .gift-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; text-align: center; }
-        .gift-card:active { background: var(--accent); color: #000; }
+        .input-bar { padding: 10px; display: flex; gap: 8px; background: #000; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+        .input-bar input { flex: 1; background: #1a1a1a; border: none; color: #fff; padding: 12px 18px; border-radius: 25px; outline: none; }
+        .btn-send { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="video-viewport">
-        <img src="https://picsum.photos/id/65/1280/720" class="stream-img">
+    <div class="viewport" id="vArea">
+        <img src="https://picsum.photos/id/65/1280/720" class="stream-bg">
+
+        <div class="streamer-box">
+            <div class="pfp-wrap">
+                <div id="aura" class="aura-fire"></div>
+                <img src="https://picsum.photos/id/177/100" class="pfp">
+            </div>
+            <div>
+                <div style="font-weight:900; font-size:12px;">Anu_B <span style="color:var(--gold)">👑</span></div>
+                <div style="font-size:9px; opacity:0.8;">👤 <span id="viewers">2,410</span></div>
+            </div>
+        </div>
 
         <div id="pkOverlay">
-            <div class="pk-timer">PK BATTLE | <span id="timerText">05:00</span></div>
+            <div style="text-align:center; font-size:10px; font-weight:900; color:var(--gold); margin-bottom:5px;">PK BATTLE</div>
             <div class="pk-track">
-                <div id="pkLeft">0</div>
-                <div id="pkRight">0</div>
-                <div class="vs-tag">VS</div>
+                <div id="pkL">0</div>
+                <div id="pkR">0</div>
+                <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; color:#000; font-size:9px; padding:2px 5px; font-weight:900;">VS</div>
             </div>
         </div>
 
         <div id="entryCanvas"></div>
 
-        <div id="luckyBox" onclick="claimLuckyBox()">🎁</div>
-
-        <div style="position:absolute; top:20px; left:15px; display:flex; gap:10px; align-items:center; background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:30px; backdrop-filter:blur(10px);">
-            <div style="width:32px; height:32px; background:var(--accent); border-radius:50%; border:2px solid #fff;"></div>
-            <div>
-                <div style="font-weight:900; font-size:12px;">Anu_B <span style="color:var(--gold)">👑</span></div>
-                <div style="font-size:9px; opacity:0.8;">👤 <span id="vCount">2,410</span> үзэгчид</div>
-            </div>
+        <div id="secretModal">
+            <div style="font-size:40px;">🎁</div>
+            <h3 style="margin:10px 0; color:var(--gold);">НУУЦ КОД ТАА!</h3>
+            <p style="font-size:12px; opacity:0.7;">Модераторын хэлсэн кодыг оруулж Diamond ав.</p>
+            <input type="text" id="sInput" placeholder="Код энд...">
+            <button onclick="checkSecret()" style="width:100%; padding:12px; background:var(--accent); border:none; border-radius:10px; font-weight:900;">НЭЭХ</button>
         </div>
     </div>
 
-    <div id="chatDisplay">
-        <div class="chat-line admin">System: Hola Live-д тавтай морил! Соёлтой харилцана уу.</div>
+    <div id="chatArea">
+        <div class="chat-msg"><b>System:</b> Hola-д тавтай морил!</div>
     </div>
 
-    <div class="action-bar">
-        <button class="gift-btn" onclick="toggleGifts()">💎</button>
-        <input type="text" id="msgInput" class="chat-input" placeholder="Чат бичих...">
-        <button class="send-btn" onclick="sendMessage()">🚀</button>
-    </div>
-
-    <div id="giftPanel">
-        <h3 style="margin-top:0; font-size:16px;">Бэлэг илгээх</h3>
-        <div class="gift-grid">
-            <div class="gift-card" onclick="sendGift('Rose', '🌹', 10)"><div>🌹</div><div style="font-size:10px;">10</div></div>
-            <div class="gift-card" onclick="sendGift('Rocket', '🚀', 500)"><div>🚀</div><div style="font-size:10px;">500</div></div>
-            <div class="gift-card" onclick="sendGift('Car', '🏎️', 1000)"><div>🏎️</div><div style="font-size:10px;">1000</div></div>
-            <div class="gift-card" onclick="sendGift('Dragon', '🐉', 5000)"><div>🐉</div><div style="font-size:10px;">5000</div></div>
-        </div>
-        <button onclick="toggleGifts()" style="width:100%; margin-top:15px; padding:10px; border:none; border-radius:10px;">Хаах</button>
+    <div class="input-bar">
+        <input type="text" id="msgIn" placeholder="Чат бичих...">
+        <button class="btn-send" onclick="handleSend()">🚀</button>
     </div>
 
     <script src="../js/eventBus.js"></script>
     <script src="../js/economyEngine.js"></script>
     <script src="../js/adminEngine.js"></script>
-    
+
     <script>
+        let activeSecret = "";
         let pkActive = false;
-        let pkScores = { left: 0, right: 0 };
-        const myUserId = "user_777"; 
+        let scores = { l: 0, r: 1500 };
+        const myId = "user_123"; // Current User ID
+        const isMod = true;     // Moderator status check
 
-        // 1. ENTRY EFFECT SYSTEM (On Load)
+        // 1. INITIAL LOAD (Ghost Mode & Aura & Entry)
         window.onload = () => {
-            const vehicle = JSON.parse(localStorage.getItem('user_vehicle'));
-            const coolId = localStorage.getItem('cool_id');
+            const adminSettings = JSON.parse(localStorage.getItem('hola_admin_settings')) || {};
+            const auraType = localStorage.getItem('user_aura');
             
-            if(vehicle && vehicle.expire > Date.now()) {
-                const canvas = document.getElementById('entryCanvas');
-                let icon = vehicle.type === 'rocket' ? '🚀' : (vehicle.type === 'car' ? '🏎️' : '🐉');
-                let name = vehicle.type.toUpperCase();
+            // Aura check
+            if(auraType === 'fire') document.getElementById('aura').style.display = 'block';
+            else document.getElementById('aura').style.display = 'none';
 
-                canvas.innerHTML = `
-                    <div class="entry-anim">
-                        <div class="entry-icon">${icon}</div>
-                        <div class="entry-name">${coolId ? coolId : 'LEGEND USER'} ОРЖ ИРЛЭЭ!</div>
-                    </div>
-                `;
-                setTimeout(() => canvas.innerHTML = '', 3500);
+            // Entry Effect (Respect Ghost Mode)
+            if(!adminSettings.isGhostMode) {
+                const vehicle = JSON.parse(localStorage.getItem('user_vehicle'));
+                if(vehicle && vehicle.expire > Date.now()) {
+                    triggerEntry(vehicle.type);
+                }
             }
         };
 
-        // 2. CHAT & ADMIN BAN SYSTEM
-        function sendMessage() {
-            // Check Ban
-            const banUntil = localStorage.getItem(`ban_${myUserId}`);
-            if(banUntil && Date.now() < parseInt(banUntil)) {
-                alert("Та чат бичих эрхээ хасуулсан байна!");
+        function triggerEntry(type) {
+            const canvas = document.getElementById('entryCanvas');
+            const icon = type === 'rocket' ? '🚀' : '🏎️';
+            canvas.innerHTML = `<div class="entry-vfx"><div style="font-size:80px">${icon}</div><div style="font-weight:900; font-size:20px; color:var(--gold);">VIP ОРЖ ИРЛЭЭ!</div></div>`;
+            setTimeout(() => canvas.innerHTML = '', 3000);
+        }
+
+        // 2. DIAMOND RAIN LOGIC
+        function triggerDiamondRain() {
+            const area = document.getElementById('vArea');
+            for(let i=0; i<40; i++) {
+                setTimeout(() => {
+                    const d = document.createElement('div');
+                    d.className = 'rain-diamond';
+                    d.innerHTML = '💎';
+                    d.style.left = Math.random() * 90 + '%';
+                    d.onclick = function() {
+                        EconomyEngine.updateWallet(10);
+                        this.remove();
+                    };
+                    area.appendChild(d);
+                    setTimeout(() => d.remove(), 3000);
+                }, i * 150);
+            }
+        }
+
+        // 3. MESSAGE & EVENT BRIDGE
+        window.addEventListener('message', (e) => {
+            const data = e.data;
+            if(data.type === 'DIAMOND_RAIN') triggerDiamondRain();
+            if(data.type === 'START_PK') {
+                pkActive = true;
+                document.getElementById('pkOverlay').style.display = 'block';
+                updatePKUI();
+            }
+            if(data.type === 'SPAWN_SECRET') {
+                activeSecret = data.code;
+                document.getElementById('secretModal').style.display = 'block';
+            }
+            if(data.type === 'GIFT_SENT') {
+                if(pkActive) { scores.l += data.price; updatePKUI(); }
+            }
+        });
+
+        // 4. CHAT & STREAM SNIPER
+        function handleSend() {
+            if(AdminEngine.isSilenced(myId)) {
+                alert("Та 1 минут Silence-тэй байна!");
                 return;
             }
 
-            const input = document.getElementById('msgInput');
-            if(input.value.trim() === "") return;
-            
-            addChatLine("Би", input.value, localStorage.getItem('cool_id') ? 'vip' : '');
+            const input = document.getElementById('msgIn');
+            if(!input.value.trim()) return;
+
+            addChatMessage("Би", input.value, localStorage.getItem('cool_id'));
             input.value = "";
         }
 
-        function addChatLine(user, text, type = '') {
-            const chat = document.getElementById('chatDisplay');
+        function addChatMessage(user, text, isVip) {
+            const chat = document.getElementById('chatArea');
             const div = document.createElement('div');
-            div.className = `chat-line ${type}`;
-            div.innerHTML = `<b>${user}:</b> ${text}`;
+            div.className = `chat-msg ${isVip ? 'vip' : ''}`;
+            div.innerHTML = `
+                <span><b>${user}:</b> ${text}</span>
+                <button class="silence-btn" style="display:${isMod?'block':'none'}" onclick="silenceUser('${user}')">Silence</button>
+            `;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // 3. GIFTING & PK SYNC
-        function toggleGifts() {
-            const panel = document.getElementById('giftPanel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        function silenceUser(uid) {
+            AdminEngine.silenceUser(uid);
+            alert(uid + " 1 минут чат бичих эрхгүй боллоо!");
         }
 
-        function sendGift(name, icon, price) {
-            const success = EconomyEngine.processGift({
-                user: localStorage.getItem('cool_id') || "User",
-                streamer: "Anu_B",
-                giftName: name,
-                icon: icon,
-                price: price
-            });
-
-            if(success) {
-                addChatLine("Би", `${icon} ${name} илгээлээ!`, 'vip');
-                if(pkActive) updatePK(price);
-                toggleGifts();
-            } else {
-                alert("Diamond хүрэлцэхгүй байна!");
-            }
+        // 5. HELPER FUNCTIONS
+        function checkSecret() {
+            const val = document.getElementById('sInput').value;
+            if(val === activeSecret) {
+                EconomyEngine.updateWallet(500);
+                alert("Зөв! 500 💎 авлаа.");
+                document.getElementById('secretModal').style.display = 'none';
+            } else { alert("Буруу байна!"); }
         }
 
-        // 4. PK LOGIC
-        function updatePK(amount) {
-            pkScores.left += amount;
-            refreshPKBar();
-        }
-
-        function refreshPKBar() {
-            const total = pkScores.left + pkScores.right;
-            const percent = total === 0 ? 50 : (pkScores.left / total) * 100;
-            document.getElementById('pkLeft').style.width = percent + '%';
-            document.getElementById('pkLeft').innerText = pkScores.left;
-            document.getElementById('pkRight').innerText = pkScores.right;
-        }
-
-        // 5. GLOBAL EVENT LISTENERS (Lucky Box & PK Start)
-        EventBus.listen((data) => {
-            if(data.type === 'SPAWN_BOX') {
-                const box = document.getElementById('luckyBox');
-                box.style.left = Math.random() * 70 + 10 + '%';
-                box.style.top = Math.random() * 50 + 20 + '%';
-                box.style.display = 'block';
-            }
-            if(data.type === 'BATTLE_STARTED') {
-                pkActive = true;
-                pkScores = { left: 0, right: 2500 }; // Random competitor score
-                document.getElementById('pkOverlay').style.display = 'block';
-                refreshPKBar();
-            }
-        });
-
-        function claimLuckyBox() {
-            const win = Math.floor(Math.random() * 50) + 5;
-            EconomyEngine.updateWallet(win);
-            alert(`🎁 Баяр хүргэе! ${win} 💎 хожлоо.`);
-            document.getElementById('luckyBox').style.display = 'none';
+        function updatePKUI() {
+            const total = scores.l + scores.r;
+            const pct = (scores.l / total) * 100;
+            document.getElementById('pkL').style.width = pct + '%';
+            document.getElementById('pkL').innerText = scores.l;
+            document.getElementById('pkR').innerText = scores.r;
         }
     </script>
 </body>
