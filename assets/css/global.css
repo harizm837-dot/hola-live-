@@ -1,0 +1,33 @@
+:root {
+    /* Hola Live Signature Colors */
+    --primary: #00f2ff;    /* Electric Cyan */
+    --secondary: #7000ff;  /* Deep Purple */
+    --accent: #ff3344;     /* Live Red */
+    --gold: #ffcc00;       /* VIP Gold */
+    --bg: #030712;         /* Dark Space */
+    --panel: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+    
+    /* Fonts */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg);
+    color: white;
+    font-family: var(--font-main);
+    overflow: hidden; /* App Shell uses internal scrolling */
+    height: 100vh;
+}
+
+/* Glassmorphism Utility */
+.glass {
+    background: var(--panel);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+}
