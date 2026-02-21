@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --danger: #ff3344; --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: #fff; padding: 20px; }
+        
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .admin-card { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; }
+        
+        h2 { font-size: 18px; margin-top: 0; color: var(--accent); }
+        input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: #fff; margin-bottom: 15px; box-sizing: border-box; }
+        
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-bottom: 10px; }
+        .btn-add { background: var(--accent); color: #000; }
+        .btn-ban { background: var(--danger); color: #fff; }
+
+        .user-list { margin-top: 20px; font-size: 13px; }
+        .user-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+
+    <h1 style="font-weight: 900; letter-spacing: -1px; margin-bottom: 30px;">🛡️ Moderator Panel</h1>
+
+    <div class="admin-grid">
+        <div class="admin-card">
+            <h2>💰 Баланс Удирдах</h2>
+            <input type="number" id="tokenAmount" placeholder="Токен хэмжээ...">
+            <button class="btn btn-add" onclick="addTokens()">+ Баланс Нэмэх</button>
+            <p style="font-size: 11px; opacity: 0.5;">*Энэ нь зөвхөн таны төхөөрөмж дээрх түрийвчийг өөрчилнө.</p>
+        </div>
+
+        <div class="admin-card">
+            <h2>🚫 Хэрэглэгч Шийтгэх</h2>
+            <input type="text" id="banUser" placeholder="Хэрэглэгчийн нэр...">
+            <button class="btn btn-ban" onclick="banUser()">Хэрэглэгчийг БАНДАХ</button>
+        </div>
+    </div>
+
+    <div class="admin-card" style="margin-top: 20px;">
+        <h2>👥 Идэвхтэй үзэгчид</h2>
+        <div class="user-list">
+            <div class="user-item"><span>👤 Gamer_99</span> <span style="color:var(--accent)">VIP</span></div>
+            <div class="user-item"><span>👤 Unknown_User</span> <span>Member</span></div>
+            <div class="user-item"><span>👤 Bot_Test</span> <span>Member</span></div>
+        </div>
+    </div>
+
+    <script>
+        function addTokens() {
+            const amount = parseInt(document.getElementById('tokenAmount').value);
+            if(!amount) return;
+            let current = parseInt(localStorage.getItem('hola_wallet')) || 0;
+            localStorage.setItem('hola_wallet', current + amount);
+            alert(amount + " токен амжилттай нэмэгдлээ!");
+        }
+
+        function banUser() {
+            const user = document.getElementById('banUser').value;
+            if(!user) return;
+            alert(user + " системээс 24 цаг хөөгдлөө!");
+        }
+    </script>
+</body>
+</html>
