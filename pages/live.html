@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #05070f; --panel: rgba(13, 18, 36, 0.8); --accent: #7df9ff; --text: #eaf6ff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; color: var(--text); overflow: hidden; height: 100vh; display: flex; }
+        
+        .video-player { flex: 1; background: #111; position: relative; display: flex; align-items: center; justify-content: center; }
+        .video-placeholder { text-align: center; color: #333; }
+        
+        /* Chat Area */
+        .chat-sidebar { width: 320px; background: var(--panel); backdrop-filter: blur(20px); border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
+        .chat-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 800; font-size: 14px; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg { font-size: 13px; line-height: 1.4; padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.03); }
+        .msg.admin { border-left: 3px solid #ff3344; background: rgba(255, 51, 68, 0.05); }
+        .msg b { color: var(--accent); margin-right: 5px; }
+        .msg.vip b { color: #ffcf40; }
+
+        .chat-input-area { padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; }
+        input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; color: #fff; outline: none; }
+        button { background: var(--accent); border: none; padding: 0 15px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+
+        .back-btn { position: absolute; top: 20px; left: 20px; z-index: 10; background: rgba(0,0,0,0.5); color: #fff; padding: 10px 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="back-btn" onclick="history.back()">⬅ Гарах</div>
+
+    <div class="video-player">
+        <div class="video-placeholder">
+            <h2 id="streamerName">LIVE STREAM</h2>
+            <p>Видео тоглуулагч ачаалж байна...</p>
+        </div>
+    </div>
+
+    <aside class="chat-sidebar">
+        <div class="chat-header">ШУУД ЧАТ</div>
+        <div class="chat-messages" id="chatBox">
+            <div class="msg"><b>System:</b> Өрөөнд тавтай морил! Дүрмээ баримтална уу.</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Мессеж бичих...">
+            <button onclick="sendMsg()">📡</button>
+        </div>
+    </aside>
+
+    <script>
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const box = document.getElementById('chatBox');
+            if(!input.value) return;
+
+            const isVIP = localStorage.getItem('is_vip') === 'true';
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isVIP ? 'msg vip' : 'msg';
+            msgDiv.innerHTML = `<b>${isVIP ? '👑' : ''} Би:</b> ${input.value}`;
+            
+            box.appendChild(msgDiv);
+            box.scrollTop = box.scrollHeight;
+            input.value = '';
+        }
+
+        // Өрөөнд орох үеийн эффект өдөөх
+        window.onload = () => {
+            const isVIP = localStorage.getItem('is_vip') === 'true';
+            if(isVIP) {
+                window.parent.postMessage({type: 'TRIGGER_EFFECT', effectName: 'LEGENDARY'}, '*');
+            }
+        };
+    </script>
+</body>
+</html>
