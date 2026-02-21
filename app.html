@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>HOLA LIVE | Core System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --bg: #05070f; 
+            --nav-bg: #0d1224; 
+            --accent: #00f2ff; 
+            --gold: #ffcf40; 
+            --danger: #ff0055;
+            --tab-inactive: #444b5e;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        body { 
+            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); 
+            color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
+        }
+
+        /* --- GLOBAL TOP BAR --- */
+        header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(13, 18, 36, 0.95); backdrop-filter: blur(20px); z-index: 999;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-top: calc(15px + env(safe-area-inset-top));
+        }
+
+        .brand { font-weight: 900; font-size: 22px; color: var(--accent); letter-spacing: -1px; }
+        
+        .user-hud { display: flex; align-items: center; gap: 10px; }
+        .hud-item { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 800;
+            display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .hud-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
+        .hud-diamond { color: var(--gold); box-shadow: 0 0 15px rgba(255, 207, 64, 0.1); }
+        .hud-level { color: var(--accent); }
+
+        /* --- MAIN CONTENT IFRAME --- */
+        #viewport-container { 
+            flex: 1; position: relative; width: 100%; background: #000;
+            overflow: hidden;
+        }
+
+        iframe { 
+            width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s;
+            background: var(--bg);
+        }
+
+        /* --- NAVIGATION BAR --- */
+        nav { 
+            height: 80px; background: var(--nav-bg); display: flex; 
+            align-items: center; justify-content: space-around;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+        }
+
+        .nav-link { 
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--tab-inactive); cursor: pointer; transition: 0.3s; flex: 1;
+            position: relative;
+        }
+
+        .nav-link.active { color: var(--accent); }
+        .nav-link.active::before {
+            content: ''; position: absolute; top: -12px; width: 25px; height: 4px;
+            background: var(--accent); border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 12px var(--accent);
+        }
+
+        .nav-link span { font-size: 24px; transition: 0.3s; }
+        .nav-link:active span { transform: scale(1.3); }
+        .nav-link label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- NOTIFICATION TOAST --- */
+        #global-toast {
+            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+            background: var(--danger); color: #fff; padding: 12px 25px; border-radius: 50px;
+            font-weight: 900; font-size: 13px; z-index: 2000; display: none;
+            box-shadow: 0 10px 30px rgba(255, 0, 85, 0.3);
+            animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes toastIn { from { top: -50px; opacity: 0; } to { top: 100px; opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">HOLA</div>
+        <div class="user-hud">
+            <div class="hud-item hud-level" onclick="navigateTo('pages/profile.html')">
+                <span id="lvl-icon">⭐</span> <span id="display-level">1</span>
+            </div>
+            <div class="hud-item hud-diamond" onclick="navigateTo('pages/store.html')">
+                <span>💎</span> <span id="display-wallet">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div id="global-toast">Мэдэгдэл</div>
+
+    <div id="viewport-container">
+        <iframe id="app-frame" src="pages/home.html" allow="autoplay; camera; microphone"></iframe>
+    </div>
+
+    <nav>
+        <div class="nav-link active" onclick="tabClick('pages/home.html', this)">
+            <span>🏠</span><label>Home</label>
+        </div>
+        <div class="nav-link" onclick="tabClick('pages/live.html', this)">
+            <span>📺</span><label>Live</label>
+        </div>
+        <div class="nav-link" onclick="tabClick('pages/invite.html', this)">
+            <span>💰</span><label>Earn</label>
+        </div>
+        <div class="nav-link" onclick="tabClick('pages/store.html', this)">
+            <span>🛒</span><label>Store</label>
+        </div>
+        <div class="nav-link" onclick="tabClick('pages/profile.html', this)">
+            <span>👤</span><label>Profile</label>
+        </div>
+        <div class="nav-link" onclick="tabClick('pages/moderator.html', this)" style="color: var(--danger);">
+            <span>🛡️</span><label>Mod</label>
+        </div>
+    </nav>
+
+    <script src="js/economyEngine.js"></script>
+    <script src="js/levelEngine.js"></script>
+    <script src="js/adminEngine.js"></script>
+
+    <script>
+        const appFrame = document.getElementById('app-frame');
+        const toast = document.getElementById('global-toast');
+
+        // 1. ТАБ СОЛИХ ЛОГИК
+        function tabClick(url, el) {
+            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+            el.classList.add('active');
+            navigateTo(url);
+        }
+
+        function navigateTo(url) {
+            appFrame.style.opacity = '0';
+            appFrame.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                appFrame.src = url;
+                appFrame.style.opacity = '1';
+                appFrame.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        // 2. ДЭЛХИЙН ХЭМЖЭЭНИЙ ӨГӨГДЛИЙН СИНКРОНИЗАЦИ
+        function syncAllData() {
+            // Түрүүвч
+            const currentWallet = localStorage.getItem('hola_wallet') || 1500;
+            document.getElementById('display-wallet').innerText = parseInt(currentWallet).toLocaleString();
+
+            // Түвшин
+            const stats = JSON.parse(localStorage.getItem('hola_user_stats')) || { level: 1 };
+            document.getElementById('display-level').innerText = stats.level;
+
+            // Aura шалгах (Хэрэв түвшин 10+ бол одонд эффект өгөх)
+            if(stats.level >= 10) {
+                document.getElementById('lvl-icon').style.textShadow = "0 0 10px #00f2ff";
+            }
+        }
+
+        // 3. THE MAGIC BRIDGE (Сэрээд ярьдаг систем)
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            console.log("App.html Bridge Recv:", data);
+
+            // A. Модератор тушаал өгвөл (Diamond Rain, Secret Box, PK)
+            const commands = ['DIAMOND_RAIN', 'SPAWN_SECRET', 'START_PK', 'SYSTEM_ALERT'];
+            if(commands.includes(data.type)) {
+                // Одоогийн хуудас Live байвал тийшээ тушаалыг "дамжуулна"
+                if(appFrame.src.includes('live.html')) {
+                    appFrame.contentWindow.postMessage(data, '*');
+                } else {
+                    showToast("Лайв өрөөнд идэвхжлээ!");
+                }
+            }
+
+            // B. Худалдан авалт эсвэл EXP нэмэгдэхэд UI шинэчлэх
+            if(data.type === 'WALLET_UPDATED' || data.type === 'LEVEL_UP') {
+                syncAllData();
+            }
+
+            // C. Silence/Ban мэдэгдэл
+            if(data.type === 'USER_ACTION') {
+                showToast(data.message);
+            }
+        });
+
+        // 4. ТУСЛАХ ФУНКЦҮҮД
+        function showToast(msg) {
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Эхлүүлэх
+        setInterval(syncAllData, 1000); // 1 сек тутамд бүх утгыг шалгана
+        syncAllData();
+
+        // Service Worker / PWA handle (Хэрэв суулгасан бол)
+        window.addEventListener('appinstalled', () => {
+            showToast("Hola Live суулгагдлаа! 🎉");
+        });
+    </script>
+</body>
+</html>
