@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --danger: #ff3344; --accent: #7df9ff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #05070f; color: #fff; padding: 25px; }
+        
+        .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: #0d1224; border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .btn { padding: 15px 25px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h1 style="font-family:'Montserrat'; letter-spacing:-1px;">Streamer Studio</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Лайв Удирдах</h3>
+            <div class="stat-grid">
+                <div class="stat-card"><div style="font-size:20px; color:var(--accent);">2.4k</div>Үзэгчид</div>
+                <div class="stat-card"><div style="font-size:20px; color:var(--gold);">15.2k</div>Нийт Токен</div>
+                <div class="stat-card"><div style="font-size:20px; color:#00ff00;">1:24:05</div>Хугацаа</div>
+            </div>
+            
+            <div style="display:flex; gap:15px;">
+                <button class="btn btn-danger">🔴 ЛАЙВ ЗОГСООХ</button>
+                <button class="btn btn-primary" onclick="spawnLuckyBox()">🎁 LUCKY BOX ТАВИХ (50💎)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Сүүлийн бэлэгнүүд</h3>
+            <div id="giftLog" style="font-size: 13px; opacity: 0.8;">
+                <div>Зоригоо: 🌹 Сарнай илгээлээ</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/eventBus.js"></script>
+    <script src="../js/economyEngine.js"></script>
+    <script>
+        function spawnLuckyBox() {
+            // Стримерээс 50 токен хасаж хайрцаг тавина
+            const success = EconomyEngine.updateWallet(-50);
+            if(success) {
+                EventBus.emit('SPAWN_BOX', {});
+                alert("🎁 Lucky Box амжилттай тавигдлаа!");
+            } else {
+                alert("Токен хүрэлцэхгүй байна!");
+            }
+        }
+
+        // Бэлэг ирэхийг сонсох
+        EventBus.listen((data) => {
+            if(data.type === 'GIFT_SENT') {
+                const log = document.getElementById('giftLog');
+                log.innerHTML = `<div><b>${data.user}:</b> ${data.icon} ${data.giftName} илгээлээ!</div>` + log.innerHTML;
+            }
+        });
+    </script>
+</body>
+</html>
