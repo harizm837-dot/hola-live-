@@ -1,71 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="mn">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="../css/variables.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background: var(--bg); color: #fff; padding: 15px; overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .card { background: var(--panel); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .price { color: var(--gold); font-weight: 900; margin-top: 10px; }
-        .buy-btn { background: var(--accent); color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; margin-top: 10px; font-weight: 700; }
+        :root { --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; --gold: #ffcf40; --danger: #ff3344; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 15px; padding-bottom: 100px; overflow-y: auto; }
+
+        h2, h3 { font-weight: 900; letter-spacing: -1px; margin-top: 25px; color: var(--accent); }
+
+        /* --- TABS --- */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { background: var(--panel); padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05); }
+        .tab.active { background: var(--accent); color: #000; }
+
+        /* --- DIAMOND CARDS --- */
+        .diamond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .d-card { background: var(--panel); border-radius: 18px; padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .d-card:active { transform: scale(0.95); }
+        .d-card .amt { font-size: 20px; font-weight: 900; margin-bottom: 5px; }
+        .d-card .price { color: var(--gold); font-weight: 700; font-size: 14px; }
+
+        /* --- SHOP ITEMS (VEHICLES, ID) --- */
+        .item-card { background: var(--panel); border-radius: 18px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .item-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.03); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .item-info { flex: 1; }
+        .item-name { font-weight: 900; font-size: 16px; margin-bottom: 4px; }
+        .item-desc { font-size: 11px; opacity: 0.6; margin-bottom: 8px; }
         
-        /* Payment Modal */
-        #paymentModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; padding: 20px; }
-        .pay-option { background: #fff; color: #000; padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; align-items: center; gap: 15px; font-weight: 800; }
+        .duration-selector { display: flex; gap: 5px; margin-bottom: 10px; }
+        .dur-btn { flex: 1; font-size: 10px; padding: 5px; border-radius: 6px; border: 1px solid #333; color: #fff; background: none; cursor: pointer; }
+        .dur-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(125,249,255,0.1); }
+
+        .buy-btn { background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; }
+
+        /* --- PAYMENT MODAL --- */
+        #payModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; padding: 30px; }
+        .pay-box { background: #fff; color: #000; border-radius: 25px; padding: 20px; text-align: center; }
+        .pay-option { display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid #eee; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: 800; }
+        .pay-option:hover { border-color: var(--accent); }
     </style>
 </head>
 <body>
-    <h3>💎 Diamond Цэнэглэх</h3>
-    <div class="grid">
-        <div class="card" onclick="openPay(5000)"><div>5,000 💎</div><div class="price">5,000₮</div></div>
-        <div class="card" onclick="openPay(10000)"><div>10,500 💎</div><div class="price">10,000₮</div></div>
-        <div class="card" onclick="openPay(50000)"><div>55,000 💎</div><div class="price">50,000₮</div></div>
+
+    <div class="tabs">
+        <div class="tab active">💎 Diamonds</div>
+        <div class="tab">🏎️ Унаа & Эффект</div>
+        <div class="tab">🔢 Cool ID</div>
     </div>
 
-    <h3>🚗 Унаа & Эффект (7 хоног)</h3>
-    <div class="grid">
-        <div class="card">
-            <div>🚀 Rocket Entry</div>
-            <button class="buy-btn" onclick="buyAsset('rocket', 50000)">50,000 💎</button>
+    <section id="diamonds">
+        <div class="diamond-grid">
+            <div class="d-card" onclick="openPayment(5000, 5000)">
+                <div class="amt">5,000 💎</div><div class="price">5,000₮</div>
+            </div>
+            <div class="d-card" onclick="openPayment(10000, 10500)">
+                <div class="amt">10,500 💎</div><div class="price">10,000₮</div>
+            </div>
+            <div class="d-card" onclick="openPayment(20000, 22000)">
+                <div class="amt">22,000 💎</div><div class="price">20,000₮</div>
+            </div>
+            <div class="d-card" onclick="openPayment(50000, 58000)">
+                <div class="amt">58,000 💎</div><div class="price">50,000₮</div>
+            </div>
         </div>
-        <div class="card">
-            <div>🏎️ Drift Car</div>
-            <button class="buy-btn" onclick="buyAsset('car', 15000)">15,000 💎</button>
+    </section>
+
+    <h3>Унаа & Орох Эффект</h3>
+    <div id="vehicles">
+        <div class="item-card">
+            <div class="item-icon">🚀</div>
+            <div class="item-info">
+                <div class="item-name">Rocket Entry</div>
+                <div class="item-desc">Өрөөнд ороход пуужин нисэж, хүн бүрт мэдэгдэнэ.</div>
+                <div class="duration-selector">
+                    <button class="dur-btn active" onclick="setDur(this, 7, 15000)">7 хоног</button>
+                    <button class="dur-btn" onclick="setDur(this, 15, 28000)">15 хоног</button>
+                    <button class="dur-btn" onclick="setDur(this, 30, 50000)">1 сар</button>
+                </div>
+                <button class="buy-btn" onclick="purchaseItem('rocket')">Авах: <span id="price-rocket">15,000</span> 💎</button>
+            </div>
+        </div>
+
+        <div class="item-card">
+            <div class="item-icon">🏎️</div>
+            <div class="item-info">
+                <div class="item-name">Drift Car</div>
+                <div class="item-desc">Сүрлэг дрифт хийж, дугуйн мөр үлдээнэ.</div>
+                <div class="duration-selector">
+                    <button class="dur-btn active" onclick="setDur(this, 7, 5000)">7 хоног</button>
+                    <button class="dur-btn" onclick="setDur(this, 15, 9000)">15 хоног</button>
+                    <button class="dur-btn" onclick="setDur(this, 30, 15000)">1 сар</button>
+                </div>
+                <button class="buy-btn" onclick="purchaseItem('car')">Авах: <span id="price-car">5,000</span> 💎</button>
+            </div>
         </div>
     </div>
 
-    <div id="paymentModal">
-        <h2>Төлбөр төлөх</h2>
-        <div class="pay-option" onclick="paySuccess()">
-            <img src="https://qpay.mn/logo.png" width="30"> QPay-ээр төлөх
+    <h3>Онцгой ID Дугаар</h3>
+    <div class="item-card">
+        <div class="item-icon">🆔</div>
+        <div class="item-info">
+            <div class="item-name">ID: 8888-9999</div>
+            <div class="item-desc">Алтан дугаар. Чат дээр онцгойрч харагдана.</div>
+            <button class="buy-btn" onclick="purchaseID('88889999', 100000)">Авах: 100,000 💎</button>
         </div>
-        <div class="pay-option" onclick="paySuccess()">
-            <img src="https://socialpay.mn/logo.png" width="30"> SocialPay-ээр төлөх
-        </div>
-        <button onclick="document.getElementById('paymentModal').style.display='none'" style="color:white; background:none; border:none; width:100%">Болих</button>
     </div>
 
-    <script src="../js/eventBus.js"></script>
+    <div id="payModal">
+        <div class="pay-box">
+            <h2 style="color:#000">Төлбөр төлөх</h2>
+            <p id="payTitle" style="color:#666">5,000 Diamond цэнэглэх</p>
+            
+            <div class="pay-option" onclick="processPayment()">
+                <img src="https://qpay.mn/logo.png" width="30"> QPay-ээр төлөх
+            </div>
+            <div class="pay-option" onclick="processPayment()">
+                <img src="https://socialpay.mn/logo.png" width="30"> SocialPay-ээр төлөх
+            </div>
+            
+            <button onclick="closeModal()" style="margin-top:20px; border:none; background:none; font-weight:bold; color:red; cursor:pointer">Болих</button>
+        </div>
+    </div>
+
     <script src="../js/economyEngine.js"></script>
+    <script src="../js/adminEngine.js"></script>
     <script>
-        let pendingAmount = 0;
-        function openPay(amt) {
-            pendingAmount = amt;
-            document.getElementById('paymentModal').style.display = 'block';
+        let selectedAmount = 0;
+        let selectedDiamonds = 0;
+        let itemSettings = { rocket: { days: 7, price: 15000 }, car: { days: 7, price: 5000 } };
+
+        // Төлбөрийн цонх нээх
+        function openPayment(mnt, dia) {
+            selectedAmount = mnt;
+            selectedDiamonds = dia;
+            document.getElementById('payTitle').innerText = `${dia.toLocaleString()} Diamond = ${mnt.toLocaleString()}₮`;
+            document.getElementById('payModal').style.display = 'flex';
         }
-        function paySuccess() {
-            EconomyEngine.updateWallet(pendingAmount);
-            alert("Амжилттай цэнэглэгдлээ!");
-            document.getElementById('paymentModal').style.display = 'none';
+
+        function closeModal() { document.getElementById('payModal').style.display = 'none'; }
+
+        // Төлбөр амжилттай (QPay Simulate)
+        function processPayment() {
+            EconomyEngine.updateWallet(selectedDiamonds);
+            alert(`Амжилттай! Таны дансанд ${selectedDiamonds} 💎 орлоо.`);
+            closeModal();
         }
-        function buyAsset(type, price) {
+
+        // Хугацаа сонгох
+        function setDur(el, days, price) {
+            const parent = el.closest('.item-info');
+            const type = parent.querySelector('.buy-btn').getAttribute('onclick').match(/'([^']+)'/)[1];
+            
+            parent.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            
+            itemSettings[type].days = days;
+            itemSettings[type].price = price;
+            document.getElementById(`price-${type}`).innerText = price.toLocaleString();
+        }
+
+        // Бараа худалдаж авах
+        function purchaseItem(type) {
+            const price = itemSettings[type].price;
+            const days = itemSettings[type].days;
+
+            if(EconomyEngine.buyVehicle(type, price, days)) {
+                alert(`${type.toUpperCase()} амжилттай авлаа! Хугацаа: ${days} хоног.`);
+            } else {
+                alert("Уучлаарай, Diamond хүрэлцэхгүй байна.");
+            }
+        }
+
+        // Cool ID худалдаж авах
+        function purchaseID(id, price) {
             if(EconomyEngine.updateWallet(-price)) {
-                const expire = Date.now() + (7 * 24 * 60 * 60 * 1000);
-                localStorage.setItem('user_vehicle', JSON.stringify({type, expire}));
-                alert(type + " худалдаж авлаа! Лайв руу ороход харагдана.");
-            } else { alert("Токен хүрэхгүй байна!"); }
+                localStorage.setItem('cool_id', id);
+                alert(`Баяр хүргэе! Чиний шинэ ID: ${id}`);
+            } else {
+                alert("Diamond хүрэлцэхгүй байна.");
+            }
         }
+
+        // Админ үнэ тохируулах (AdminEngine-с дата унших)
+        window.onload = () => {
+            const adminData = AdminEngine.settings.shop_items;
+            if(adminData.rocket) {
+                // Админ гараар үнэ өөрчилсөн бол энд шинэчилж болно
+            }
+        };
     </script>
 </body>
 </html>
