@@ -2,52 +2,82 @@
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../assets/css/global.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { padding: 30px; background: transparent; overflow-y: auto; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+        :root { --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; --text: #eaf6ff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); padding: 20px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .section-title { font-size: 24px; font-weight: 900; letter-spacing: -1px; }
+        .live-count { background: rgba(255, 51, 68, 0.1); color: #ff3344; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; border: 1px solid rgba(255, 51, 68, 0.2); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        
+        .stream-card { 
+            background: var(--panel); border-radius: 24px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
         }
-        .card {
-            background: var(--panel); border-radius: 20px; overflow: hidden;
-            border: 1px solid var(--border); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer; position: relative;
-        }
-        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-        .thumb { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; position: relative; }
-        .live-tag { position: absolute; top: 15px; left: 15px; background: var(--accent); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; box-shadow: 0 0 15px rgba(255, 51, 68, 0.4); }
-        .info { padding: 20px; }
-        .info h4 { font-size: 16px; margin-bottom: 5px; color: #fff; }
-        .info p { font-size: 13px; color: #8a99ad; }
+        .stream-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--accent); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        
+        .thumbnail { width: 100%; aspect-ratio: 16/9; background: #1a1f35; position: relative; background-size: cover; background-position: center; }
+        .live-tag { position: absolute; top: 15px; left: 15px; background: #ff3344; color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; box-shadow: 0 5px 15px rgba(255,51,68,0.4); }
+        .viewer-count { position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+        
+        .stream-info { padding: 18px; }
+        .user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(45deg, var(--accent), #7000ff); }
+        .username { font-weight: 700; font-size: 14px; }
+        .stream-title { font-size: 13px; color: #8a99ad; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
-    <h2 style="margin-bottom: 30px; font-weight: 800; font-size: 28px;">🔥 Одоо шууд</h2>
-    <div class="grid" id="streamGrid"></div>
+
+    <div class="section-header">
+        <div class="section-title">🔥 Одоо шууд</div>
+        <div class="live-count">● 124 LIVE</div>
+    </div>
+
+    <div class="grid" id="streamGrid">
+        </div>
 
     <script>
         const streams = [
-            { user: "Zorigoo", title: "PUBG Mobile Season 24", viewers: "5.1k", img: "https://picsum.photos/id/1/600/337" },
-            { user: "Anu_B", title: "Оройн мэнд, хамтдаа ярилцъя ☕", viewers: "850", img: "https://picsum.photos/id/2/600/337" },
-            { user: "Bold_Gamer", title: "GTA 5 Roleplay Монгол", viewers: "1.2k", img: "https://picsum.photos/id/3/600/337" },
-            { user: "Tech_MGL", title: "iPhone 17 Pro Max тойм", viewers: "2.1k", img: "https://picsum.photos/id/4/600/337" }
+            { id: 1, user: "Zorigoo_Gamer", title: "Rank Push to Conqueror 🏆", viewers: "1.2k", img: "https://picsum.photos/id/1/600/400" },
+            { id: 2, user: "Anu_B", title: "Оройн мэнд, кофе уунгаа ярилцъя ☕", viewers: "850", img: "https://picsum.photos/id/2/600/400" },
+            { id: 3, user: "Tech_MGL", title: "iPhone 17 Pro Max анхны сэтгэгдэл", viewers: "2.5k", img: "https://picsum.photos/id/3/600/400" },
+            { id: 4, user: "Music_Lab", title: "Lo-fi Beats to Study/Relax", viewers: "430", img: "https://picsum.photos/id/4/600/400" }
         ];
 
         const grid = document.getElementById('streamGrid');
+        
         streams.forEach(s => {
-            grid.innerHTML += `
-                <div class="card">
-                    <div class="thumb" style="background-image: url('${s.img}')">
-                        <div class="live-tag">ШУУД</div>
+            const card = document.createElement('div');
+            card.className = 'stream-card';
+            card.innerHTML = `
+                <div class="thumbnail" style="background-image: url('${s.img}')">
+                    <div class="live-tag">ШУУД</div>
+                    <div class="viewer-count">👤 ${s.viewers}</div>
+                </div>
+                <div class="stream-info">
+                    <div class="user-row">
+                        <div class="avatar"></div>
+                        <span class="username">${s.user}</span>
                     </div>
-                    <div class="info">
-                        <h4>${s.title}</h4>
-                        <p>${s.user} • 👤 ${s.viewers}</p>
-                    </div>
+                    <div class="stream-title">${s.title}</div>
                 </div>
             `;
+            
+            card.onclick = () => {
+                // Хэрэв VIP бол орох эффект өдөөнө
+                const isVIP = localStorage.getItem('is_vip') === 'true';
+                if(isVIP) {
+                    window.parent.postMessage({type: 'TRIGGER_EFFECT', effectName: 'ELITE'}, '*');
+                }
+                alert(s.user + "-ын өрөө рүү шилжиж байна...");
+            };
+            
+            grid.appendChild(card);
         });
     </script>
 </body>
