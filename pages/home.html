@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        body { padding: 30px; background: transparent; overflow-y: auto; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: var(--panel); border-radius: 20px; overflow: hidden;
+            border: 1px solid var(--border); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; position: relative;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .thumb { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; position: relative; }
+        .live-tag { position: absolute; top: 15px; left: 15px; background: var(--accent); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; box-shadow: 0 0 15px rgba(255, 51, 68, 0.4); }
+        .info { padding: 20px; }
+        .info h4 { font-size: 16px; margin-bottom: 5px; color: #fff; }
+        .info p { font-size: 13px; color: #8a99ad; }
+    </style>
+</head>
+<body>
+    <h2 style="margin-bottom: 30px; font-weight: 800; font-size: 28px;">🔥 Одоо шууд</h2>
+    <div class="grid" id="streamGrid"></div>
+
+    <script>
+        const streams = [
+            { user: "Zorigoo", title: "PUBG Mobile Season 24", viewers: "5.1k", img: "https://picsum.photos/id/1/600/337" },
+            { user: "Anu_B", title: "Оройн мэнд, хамтдаа ярилцъя ☕", viewers: "850", img: "https://picsum.photos/id/2/600/337" },
+            { user: "Bold_Gamer", title: "GTA 5 Roleplay Монгол", viewers: "1.2k", img: "https://picsum.photos/id/3/600/337" },
+            { user: "Tech_MGL", title: "iPhone 17 Pro Max тойм", viewers: "2.1k", img: "https://picsum.photos/id/4/600/337" }
+        ];
+
+        const grid = document.getElementById('streamGrid');
+        streams.forEach(s => {
+            grid.innerHTML += `
+                <div class="card">
+                    <div class="thumb" style="background-image: url('${s.img}')">
+                        <div class="live-tag">ШУУД</div>
+                    </div>
+                    <div class="info">
+                        <h4>${s.title}</h4>
+                        <p>${s.user} • 👤 ${s.viewers}</p>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
