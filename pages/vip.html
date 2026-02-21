@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0b0f1a; --panel: #12182b; --accent: #7df9ff; --gold: #ffcf40; --text: #eaf6ff; --border: rgba(255,255,255,0.1); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; height: 90vh; }
+        
+        .vip-card {
+            background: var(--panel); width: 90%; max-width: 350px; padding: 30px; 
+            border-radius: 30px; border: 1px solid var(--border); text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .vip-icon { font-size: 50px; margin-bottom: 15px; display: block; }
+        h1 { font-size: 24px; font-weight: 900; margin: 0 0 10px 0; letter-spacing: -1px; }
+        .desc { color: #8a99ad; font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
+        
+        .benefit-list { text-align: left; font-size: 13px; margin-bottom: 25px; padding: 0; list-style: none; }
+        .benefit-list li { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .benefit-list li::before { content: "✦"; color: var(--gold); }
+
+        .vip-btn {
+            width: 100%; padding: 15px; border-radius: 15px; border: none;
+            background: linear-gradient(90deg, var(--gold), #ff9900);
+            color: #000; font-weight: 900; cursor: pointer; transition: 0.3s;
+        }
+        .vip-btn:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(255,207,64,0.3); }
+        .vip-btn.active { background: rgba(255,255,255,0.1); color: #fff; cursor: default; }
+    </style>
+</head>
+<body>
+
+    <div class="vip-card">
+        <span class="vip-icon">👑</span>
+        <h1 id="title">VIP ACCESS</h1>
+        <p class="desc">Онцгой эрхүүдийг нээж, чат дээр бусдаас ялгарч харагдаарай.</p>
+        
+        <ul class="benefit-list">
+            <li>VIP Badge чат дээр харагдана</li>
+            <li>Entry Effect (Орох эффект) нээгдэнэ</li>
+            <li>Дэлгүүрийн бараа 20% хямдарна</li>
+        </ul>
+
+        <button id="vipBtn" class="vip-btn" onclick="buyVIP()">250💎 Төлөөд идэвхжүүлэх</button>
+    </div>
+
+    <script>
+        function checkStatus() {
+            const isVIP = localStorage.getItem('is_vip') === 'true';
+            const btn = document.getElementById('vipBtn');
+            const title = document.getElementById('title');
+
+            if (isVIP) {
+                title.innerText = "VIP ИДЭВХТЭЙ";
+                title.style.color = "var(--gold)";
+                btn.innerText = "ТА ОДОО VIP ГИШҮҮН";
+                btn.classList.add('active');
+                btn.onclick = null;
+            }
+        }
+
+        function buyVIP() {
+            let wallet = parseInt(localStorage.getItem('hola_wallet')) || 1500;
+            const cost = 250;
+
+            if (wallet >= cost) {
+                if (confirm("250 токен төлж VIP болох уу?")) {
+                    localStorage.setItem('hola_wallet', wallet - cost);
+                    localStorage.setItem('is_vip', 'true');
+                    checkStatus();
+                    
+                    // app.html-д эффект үзүүлэхийг тушаах
+                    window.parent.postMessage({type: 'TRIGGER_EFFECT', effectName: 'VIP'}, '*');
+                }
+            } else {
+                alert("💎 Токен хүрэлцэхгүй байна!");
+            }
+        }
+
+        window.onload = checkStatus;
+    </script>
+</body>
+</html>
