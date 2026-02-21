@@ -5,176 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #05070f; 
-            --panel: #0d1224; 
-            --accent: #7df9ff; 
-            --text: #eaf6ff; 
-            --danger: #ff3344;
-        }
+        :root { --bg: #05070f; --accent: #7df9ff; --gold: #ffcf40; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; }
         
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: transparent; 
-            color: var(--text); 
-            padding: 20px; 
-            padding-bottom: 100px; /* Доор нь зай авах */
-        }
+        .video-player { flex: 1; position: relative; background: #000; overflow: hidden; }
         
-        /* Header Section */
-        .header-section { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 25px; 
-        }
-        .title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
-        .live-badge { 
-            background: rgba(255, 51, 68, 0.1); 
-            color: var(--danger); 
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            font-size: 11px; 
-            font-weight: 800; 
-            border: 1px solid rgba(255, 51, 68, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .dot { width: 6px; height: 6px; background: var(--danger); border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.3; } }
+        /* Gift Animation Layer */
+        #giftEffectArea { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+        .dragon-anim { position: absolute; bottom: 0; width: 100%; height: 100%; background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJ6bXN4NnV3eG4xbXN4Z3R4NnV3eG4xbXN4Z3R4NnV3eG4mbXA9ZW0vZW1fbmF0aXZlL2dpZl9h/3o7TKMGpxN32WJ9m5G/giphy.gif') center no-repeat; background-size: contain; animation: dragonFlight 4s forwards; }
+        @keyframes dragonFlight { from { transform: translateX(-100%) scale(0.5); } to { transform: translateX(100%) scale(1.5); } }
 
-        /* Grid System */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 20px; 
-        }
+        /* Chat & Gift Menu */
+        .sidebar { width: 320px; background: rgba(13, 18, 36, 0.95); display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,0.1); }
+        .chat-box { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; }
         
-        /* Stream Card */
-        .card { 
-            background: var(--panel); 
-            border-radius: 24px; 
-            overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: pointer;
-            position: relative;
-        }
-        .card:hover { 
-            transform: translateY(-8px); 
-            border-color: var(--accent); 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6); 
-        }
-        
-        .thumb { 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            background-color: #1a1f35;
-            background-size: cover; 
-            background-position: center; 
-            position: relative; 
-        }
-        .overlay-tags { 
-            position: absolute; 
-            top: 12px; 
-            left: 12px; 
-            right: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-        }
-        .tag-live { 
-            background: var(--danger); 
-            color: #fff; 
-            padding: 4px 10px; 
-            border-radius: 8px; 
-            font-size: 10px; 
-            font-weight: 900; 
-        }
-        .tag-viewers { 
-            background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(8px); 
-            padding: 4px 10px; 
-            border-radius: 8px; 
-            font-size: 10px; 
-            font-weight: 700; 
-        }
-        
-        .info { padding: 18px; }
-        .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .avatar { 
-            width: 34px; 
-            height: 34px; 
-            border-radius: 50%; 
-            background: linear-gradient(45deg, var(--accent), #7000ff); 
-            border: 2px solid var(--bg);
-        }
-        .username { font-weight: 700; font-size: 14px; color: #fff; }
-        .stream-desc { font-size: 13px; color: #8a99ad; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .gift-menu { height: 180px; background: #1a1f35; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 2px solid var(--accent); }
+        .gift-item { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 8px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .gift-item:hover { border-color: var(--accent); background: rgba(125, 249, 255, 0.1); }
+        .gift-icon { font-size: 24px; display: block; }
+        .gift-price { font-size: 10px; font-weight: 800; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="header-section">
-        <div class="title">Шууд дамжуулалт</div>
-        <div class="live-badge"><div class="dot"></div> 124 LIVE</div>
+    <div class="video-player">
+        <div id="giftEffectArea"></div>
+        <div style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;">🎥 LIVE: Zorigoo_Gamer</div>
     </div>
 
-    <div class="grid" id="mainGrid">
+    <aside class="sidebar">
+        <div class="chat-box" id="chat"><b>System:</b> Өрөөнд тавтай морил!</div>
+        
+        <div class="gift-menu">
+            <div class="gift-item" onclick="sendGift('Сарнай', '🌹', 10)">
+                <span class="gift-icon">🌹</span> <span class="gift-price">10💎</span>
+            </div>
+            <div class="gift-item" onclick="sendGift('Пуужин', '🚀', 500)">
+                <span class="gift-icon">🚀</span> <span class="gift-price">500💎</span>
+            </div>
+            <div class="gift-item" onclick="sendGift('ЛУУ', '🐉', 2000)">
+                <span class="gift-icon">🐉</span> <span class="gift-price">2000💎</span>
+            </div>
         </div>
+    </aside>
 
     <script>
-        // Жишээ дата
-        const streams = [
-            { id: 1, user: "Zorigoo_Gamer", desc: "Rank Push to Global Top 100! 🔥", viewers: "2.4k", img: "https://picsum.photos/id/101/600/350" },
-            { id: 2, user: "Anu_B", desc: "Асуулт хариулт & Чөлөөт яриа 💬", viewers: "1.1k", img: "https://picsum.photos/id/102/600/350" },
-            { id: 3, user: "TechMGL", desc: "M4 Ultra MacBook Pro задаргаа 💻", viewers: "850", img: "https://picsum.photos/id/103/600/350" },
-            { id: 4, user: "Music_Session", desc: "Night Vibes Piano Mix 🎹", viewers: "430", img: "https://picsum.photos/id/104/600/350" },
-            { id: 5, user: "Nomadic_Travel", desc: "Хөвсгөл нуурын мөсөн баяр ❄️", viewers: "3.2k", img: "https://picsum.photos/id/105/600/350" },
-            { id: 6, user: "Cooking_MGL", desc: "Сүүлний тостой хуушуур хийцгээе 🥟", viewers: "620", img: "https://picsum.photos/id/106/600/350" }
-        ];
+        function sendGift(name, icon, price) {
+            let wallet = parseInt(localStorage.getItem('hola_wallet')) || 0;
+            if(wallet < price) return alert("Токен хүрэлцэхгүй байна!");
 
-        const grid = document.getElementById('mainGrid');
+            localStorage.setItem('hola_wallet', wallet - price);
+            
+            // 1. Өрөөний эффект
+            playEffect(name);
 
-        streams.forEach(stream => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="thumb" style="background-image: url('${stream.img}')">
-                    <div class="overlay-tags">
-                        <div class="tag-live">ШУУД</div>
-                        <div class="tag-viewers">👤 ${stream.viewers}</div>
-                    </div>
-                </div>
-                <div class="info">
-                    <div class="user-info">
-                        <div class="avatar"></div>
-                        <div class="username">${stream.user}</div>
-                    </div>
-                    <div class="stream-desc">${stream.desc}</div>
-                </div>
-            `;
+            // 2. Global Notification (Бусад бүх өрөөнд харагдана)
+            window.parent.postMessage({
+                type: 'GIFT_SENT',
+                user: 'Би',
+                streamer: 'Zorigoo_Gamer',
+                giftName: name,
+                icon: icon,
+                price: price
+            }, '*');
+        }
+
+        function playEffect(name) {
+            const area = document.getElementById('giftEffectArea');
+            const div = document.createElement('div');
             
-            // Карт дээр дарахад Live өрөө рүү орох
-            card.onclick = () => {
-                const isVIP = localStorage.getItem('is_vip') === 'true';
-                
-                // Хэрэв VIP бол орох эффект өдөөнө
-                if(isVIP) {
-                    window.parent.postMessage({
-                        type: 'TRIGGER_EFFECT', 
-                        effectName: 'LEGENDARY'
-                    }, '*');
-                }
-                
-                // Live өрөө рүү шилжих
-                window.location.href = 'live.html';
-            };
-            
-            grid.appendChild(card);
-        });
+            if(name === 'ЛУУ') {
+                div.className = 'dragon-anim';
+                area.appendChild(div);
+                setTimeout(() => div.remove(), 4000);
+            } else if (name === 'Пуужин') {
+                div.innerHTML = `<h1 style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:100px; animation: rocketUp 2s forwards;">🚀</h1>`;
+                area.appendChild(div);
+                setTimeout(() => div.remove(), 2000);
+            }
+        }
     </script>
+    
+    <style>
+        @keyframes rocketUp { from { bottom: -100px; } to { bottom: 120%; } }
+    </style>
 </body>
 </html>
