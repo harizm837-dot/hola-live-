@@ -5,89 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #05070f; --accent: #7df9ff; --gold: #ffcf40; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; }
+        :root { --accent: #7df9ff; --gold: #ffcf40; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; overflow: hidden; }
         
-        .video-player { flex: 1; position: relative; background: #000; overflow: hidden; }
-        
-        /* Gift Animation Layer */
-        #giftEffectArea { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-        .dragon-anim { position: absolute; bottom: 0; width: 100%; height: 100%; background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJ6bXN4NnV3eG4xbXN4Z3R4NnV3eG4xbXN4Z3R4NnV3eG4mbXA9ZW0vZW1fbmF0aXZlL2dpZl9h/3o7TKMGpxN32WJ9m5G/giphy.gif') center no-repeat; background-size: contain; animation: dragonFlight 4s forwards; }
-        @keyframes dragonFlight { from { transform: translateX(-100%) scale(0.5); } to { transform: translateX(100%) scale(1.5); } }
+        /* Видео хэсэг */
+        .video-container { flex: 1; position: relative; background: #111; display: flex; align-items: center; justify-content: center; }
+        .live-stream { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
 
-        /* Chat & Gift Menu */
-        .sidebar { width: 320px; background: rgba(13, 18, 36, 0.95); display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,0.1); }
-        .chat-box { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; }
-        
-        .gift-menu { height: 180px; background: #1a1f35; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 2px solid var(--accent); }
-        .gift-item { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 8px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .gift-item:hover { border-color: var(--accent); background: rgba(125, 249, 255, 0.1); }
-        .gift-icon { font-size: 24px; display: block; }
-        .gift-price { font-size: 10px; font-weight: 800; color: var(--gold); }
+        /* Mini Game: Lucky Box */
+        #luckyBox {
+            position: absolute; width: 80px; height: 80px; cursor: pointer;
+            display: none; z-index: 100; animation: bounce 0.5s infinite alternate;
+        }
+        @keyframes bounce { from { transform: translateY(0) scale(1); } to { transform: translateY(-10px) scale(1.1); } }
+
+        /* Чат ба Sidebar */
+        .chat-sidebar { width: 350px; background: rgba(13, 18, 36, 0.95); display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,0.1); }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; font-size: 13px; }
+        .msg b { color: var(--accent); }
+
+        .gift-panel { padding: 15px; background: #1a1f35; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .gift-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .gift-btn:hover { background: var(--accent); color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="video-player">
-        <div id="giftEffectArea"></div>
-        <div style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;">🎥 LIVE: Zorigoo_Gamer</div>
-    </div>
-
-    <aside class="sidebar">
-        <div class="chat-box" id="chat"><b>System:</b> Өрөөнд тавтай морил!</div>
+    <div class="video-container">
+        <img src="https://picsum.photos/id/64/1200/800" class="live-stream">
         
-        <div class="gift-menu">
-            <div class="gift-item" onclick="sendGift('Сарнай', '🌹', 10)">
-                <span class="gift-icon">🌹</span> <span class="gift-price">10💎</span>
-            </div>
-            <div class="gift-item" onclick="sendGift('Пуужин', '🚀', 500)">
-                <span class="gift-icon">🚀</span> <span class="gift-price">500💎</span>
-            </div>
-            <div class="gift-item" onclick="sendGift('ЛУУ', '🐉', 2000)">
-                <span class="gift-icon">🐉</span> <span class="gift-price">2000💎</span>
+        <div id="luckyBox" onclick="claimBox()">🎁</div>
+        
+        <div style="position:absolute; top:20px; left:20px; display:flex; align-items:center; gap:10px;">
+            <div style="width:40px; height:40px; border-radius:50%; background:var(--accent);"></div>
+            <div>
+                <div style="font-weight:900;">Anu_B</div>
+                <div style="font-size:10px; opacity:0.7;">👤 2,410 үзэж байна</div>
             </div>
         </div>
-    </aside>
+    </div>
 
+    <div class="chat-sidebar">
+        <div class="chat-messages" id="chat">
+            <div class="msg"><b>System:</b> Өрөөнд тавтай морил! Дүрмээ баримтална уу.</div>
+        </div>
+        
+        <div class="gift-panel">
+            <div class="gift-btn" onclick="sendGift('Сарнай', '🌹', 10)">🌹 10</div>
+            <div class="gift-btn" onclick="sendGift('Пуужин', '🚀', 500)">🚀 500</div>
+            <div class="gift-btn" onclick="sendGift('Луу', '🐉', 2000)">🐉 2000</div>
+        </div>
+    </div>
+
+    <script src="../js/eventBus.js"></script>
+    <script src="../js/economyEngine.js"></script>
+    <script src="../js/growthEngine.js"></script>
     <script>
+        // Бэлэг илгээх
         function sendGift(name, icon, price) {
-            let wallet = parseInt(localStorage.getItem('hola_wallet')) || 0;
-            if(wallet < price) return alert("Токен хүрэлцэхгүй байна!");
-
-            localStorage.setItem('hola_wallet', wallet - price);
-            
-            // 1. Өрөөний эффект
-            playEffect(name);
-
-            // 2. Global Notification (Бусад бүх өрөөнд харагдана)
-            window.parent.postMessage({
-                type: 'GIFT_SENT',
-                user: 'Би',
-                streamer: 'Zorigoo_Gamer',
-                giftName: name,
-                icon: icon,
-                price: price
-            }, '*');
-        }
-
-        function playEffect(name) {
-            const area = document.getElementById('giftEffectArea');
-            const div = document.createElement('div');
-            
-            if(name === 'ЛУУ') {
-                div.className = 'dragon-anim';
-                area.appendChild(div);
-                setTimeout(() => div.remove(), 4000);
-            } else if (name === 'Пуужин') {
-                div.innerHTML = `<h1 style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:100px; animation: rocketUp 2s forwards;">🚀</h1>`;
-                area.appendChild(div);
-                setTimeout(() => div.remove(), 2000);
+            const success = EconomyEngine.processGift({
+                user: "Намайг", streamer: "Anu_B", giftName: name, icon: icon, price: price
+            });
+            if(success) {
+                GrowthEngine.addXP(price / 10);
+                addChatMessage("Би", `${icon} ${name} илгээлээ!`);
+            } else {
+                alert("Токен хүрэлцэхгүй байна!");
             }
         }
+
+        // Mini Game Logic: Стримерээс ирэх дохиог сонсох
+        EventBus.listen((data) => {
+            if(data.type === 'SPAWN_BOX') {
+                const box = document.getElementById('luckyBox');
+                box.style.left = Math.random() * 70 + '%';
+                box.style.top = Math.random() * 70 + '%';
+                box.style.display = 'block';
+            }
+        });
+
+        function claimBox() {
+            const prize = Math.floor(Math.random() * 50) + 1;
+            EconomyEngine.updateWallet(prize);
+            document.getElementById('luckyBox').style.display = 'none';
+            alert(`🎉 Баяр хүргэе! Хайрцагнаас ${prize}💎 хожлоо!`);
+        }
+
+        function addChatMessage(user, text) {
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div class="msg"><b>${user}:</b> ${text}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }
     </script>
-    
-    <style>
-        @keyframes rocketUp { from { bottom: -100px; } to { bottom: 120%; } }
-    </style>
 </body>
 </html>
