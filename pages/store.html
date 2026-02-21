@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <style>
+        body { padding: 30px; background: transparent; overflow-y: auto; }
+        .store-section { margin-bottom: 50px; }
+        .section-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .item-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 25px; text-align: center; transition: 0.3s; cursor: pointer; }
+        .item-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); transform: translateY(-5px); }
+        .icon { font-size: 40px; margin-bottom: 15px; display: block; }
+        .name { font-weight: 800; display: block; margin-bottom: 5px; }
+        .price { color: var(--primary); font-size: 14px; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="store-section">
+        <div class="section-title">💎 Токен авах</div>
+        <div class="grid">
+            <div class="item-card" onclick="buyTokens(1000, 10000)">
+                <span class="icon">💎</span>
+                <span class="name">1,000 Token</span>
+                <span class="price">₮ 10,000</span>
+            </div>
+            <div class="item-card" onclick="buyTokens(5000, 45000)">
+                <span class="icon">🔥</span>
+                <span class="name">5,000 Token</span>
+                <span class="price">₮ 45,000</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="store-section">
+        <div class="section-title">🚀 Entry Effects (Орох эффект)</div>
+        <div class="grid">
+            <div class="item-card" onclick="buyEffect('🚀 Rocket')">
+                <span class="icon">🚀</span>
+                <span class="name">Пуужин</span>
+                <span class="price">💎 2,000 / 7х</span>
+            </div>
+            <div class="item-card" onclick="buyEffect('🐉 Dragon')">
+                <span class="icon">🐉</span>
+                <span class="name">Луу</span>
+                <span class="price">💎 5,000 / 7х</span>
+            </div>
+            <div class="item-card" onclick="buyEffect('🏎️ Drift')">
+                <span class="icon">🏎️</span>
+                <span class="name">Drift Machine</span>
+                <span class="price">💎 1,500 / 7х</span>
+            </div>
+            <div class="item-card" onclick="buyEffect('👑 King')">
+                <span class="icon">👑</span>
+                <span class="name">Elite King</span>
+                <span class="price">💎 10,000 / 7х</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function buyTokens(amount, cost) {
+            let current = parseInt(localStorage.getItem('hola_balance')) || 1500;
+            localStorage.setItem('hola_balance', current + amount);
+            alert("Амжилттай! " + amount + " токен нэмэгдлээ.");
+        }
+
+        function buyEffect(name) {
+            alert(name + " эффект амжилттай идэвхжлээ! Таныг өрөөнд ороход бүгд атаархах болно.");
+        }
+    </script>
+</body>
+</html>
