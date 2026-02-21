@@ -3,98 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Hola Live | Live Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #7df9ff; --gold: #ffcf40; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; overflow: hidden; }
-        
-        /* Видео хэсэг */
-        .video-container { flex: 1; position: relative; background: #111; display: flex; align-items: center; justify-content: center; }
-        .live-stream { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-
-        /* Mini Game: Lucky Box */
-        #luckyBox {
-            position: absolute; width: 80px; height: 80px; cursor: pointer;
-            display: none; z-index: 100; animation: bounce 0.5s infinite alternate;
+        :root { 
+            --accent: #7df9ff; --gold: #ffcf40; --danger: #ff0055; 
+            --blue: #0055ff; --panel: rgba(13, 18, 36, 0.95); 
         }
-        @keyframes bounce { from { transform: translateY(0) scale(1); } to { transform: translateY(-10px) scale(1.1); } }
 
-        /* Чат ба Sidebar */
-        .chat-sidebar { width: 350px; background: rgba(13, 18, 36, 0.95); display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,0.1); }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; font-size: 13px; }
-        .msg b { color: var(--accent); }
+        body { 
+            margin: 0; font-family: 'Inter', sans-serif; background: #000; 
+            color: #fff; height: 100vh; display: flex; overflow: hidden; 
+        }
 
-        .gift-panel { padding: 15px; background: #1a1f35; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .gift-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .gift-btn:hover { background: var(--accent); color: #000; }
+        /* --- STREAM AREA --- */
+        .video-container { 
+            flex: 1; position: relative; background: #05070f; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        
+        .live-stream-placeholder { 
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.7; 
+        }
+
+        /* --- PK BATTLE UI --- */
+        .pk-wrapper {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 85%; z-index: 100; display: none; /* PK эхлэхэд харагдана */
+        }
+        .pk-timer {
+            text-align: center; font-family: 'Montserrat'; color: var(--gold);
+            font-size: 14px; text-shadow: 0 0 10px rgba(0,0,0,0.5); margin-bottom: 5px;
+        }
+        .battle-bar {
+            height: 28px; background: #222; border-radius: 14px; overflow: hidden;
+            display: flex; border: 2px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .bar-left { 
+            height: 100%; background: linear-gradient(90deg, var(--danger), #ff8800); 
+            width: 50%; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; align-items: center; padding-left: 15px; font-weight: 900;
+        }
+        .bar-right { 
+            flex: 1; background: linear-gradient(90deg, var(--blue), #00d4ff); 
+            display: flex; align-items: center; justify-content: flex-end; 
+            padding-right: 15px; font-weight: 900;
+        }
+        .vs-tag {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            background: #fff; color: #000; font-size: 10px; font-weight: 900;
+            padding: 3px 8px; border-radius: 4px;
+        }
+
+        /* --- LUCKY BOX GAME --- */
+        #luckyBox {
+            position: absolute; font-size: 50px; cursor: pointer; z-index: 110;
+            display: none; animation: boxJump 0.6s infinite alternate;
+            filter: drop-shadow(0 0 15px var(--gold));
+        }
+        @keyframes boxJump { from { transform: scale(1); } to { transform: scale(1.2) translateY(-10px); } }
+
+        /* --- CHAT & GIFTS --- */
+        .sidebar { 
+            width: 360px; background: var(--panel); border-left: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; 
+        }
+        .chat-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; font-size: 13px; border-left: 3px solid var(--accent); }
+        .message b { color: var(--accent); }
+
+        .gift-grid { 
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px;
+            background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .gift-item { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.2s;
+        }
+        .gift-item:hover { background: var(--accent); color: #000; transform: translateY(-3px); }
+        .gift-item div:first-child { font-size: 24px; margin-bottom: 5px; }
+        .gift-item div:last-child { font-size: 11px; font-weight: 700; opacity: 0.8; }
+
+        /* Streamer Info */
+        .streamer-header {
+            position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 12px;
+            background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 50px; backdrop-filter: blur(10px);
+        }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; }
     </style>
 </head>
 <body>
 
     <div class="video-container">
-        <img src="https://picsum.photos/id/64/1200/800" class="live-stream">
+        <img src="https://picsum.photos/id/65/1200/800" class="live-stream-placeholder">
         
+        <div class="pk-wrapper" id="pkUI">
+            <div class="pk-timer" id="pkTimer">05:00</div>
+            <div class="battle-bar">
+                <div class="bar-left" id="barLeft">0</div>
+                <div class="bar-right" id="barRight">0</div>
+                <div class="vs-tag">VS</div>
+            </div>
+        </div>
+
         <div id="luckyBox" onclick="claimBox()">🎁</div>
-        
-        <div style="position:absolute; top:20px; left:20px; display:flex; align-items:center; gap:10px;">
-            <div style="width:40px; height:40px; border-radius:50%; background:var(--accent);"></div>
+
+        <div class="streamer-header">
+            <div class="avatar"></div>
             <div>
-                <div style="font-weight:900;">Anu_B</div>
-                <div style="font-size:10px; opacity:0.7;">👤 2,410 үзэж байна</div>
+                <div style="font-weight:900; font-size:14px;">Anu_B <span style="color:var(--gold)">👑</span></div>
+                <div style="font-size:10px; opacity:0.8;">👤 2,410 үзэгчид</div>
             </div>
         </div>
     </div>
 
-    <div class="chat-sidebar">
-        <div class="chat-messages" id="chat">
-            <div class="msg"><b>System:</b> Өрөөнд тавтай морил! Дүрмээ баримтална уу.</div>
+    <aside class="sidebar">
+        <div class="chat-area" id="chat">
+            <div class="message"><b>System:</b> Hola Live-д тавтай морил! Соёлтой харьцана уу.</div>
         </div>
-        
-        <div class="gift-panel">
-            <div class="gift-btn" onclick="sendGift('Сарнай', '🌹', 10)">🌹 10</div>
-            <div class="gift-btn" onclick="sendGift('Пуужин', '🚀', 500)">🚀 500</div>
-            <div class="gift-btn" onclick="sendGift('Луу', '🐉', 2000)">🐉 2000</div>
+
+        <div class="gift-grid">
+            <div class="gift-item" onclick="sendGift('Rose', '🌹', 10)">
+                <div>🌹</div><div>10</div>
+            </div>
+            <div class="gift-item" onclick="sendGift('Finger', '🫰', 50)">
+                <div>🫰</div><div>50</div>
+            </div>
+            <div class="gift-item" onclick="sendGift('Rocket', '🚀', 500)">
+                <div>🚀</div><div>500</div>
+            </div>
+            <div class="gift-item" onclick="sendGift('Car', '🏎️', 1000)">
+                <div>🏎️</div><div>1000</div>
+            </div>
+            <div class="gift-item" onclick="sendGift('Dragon', '🐉', 5000)">
+                <div>🐉</div><div>5000</div>
+            </div>
+            <div class="gift-item" onclick="sendGift('Crown', '👑', 9999)">
+                <div>👑</div><div>9999</div>
+            </div>
         </div>
-    </div>
+    </aside>
 
     <script src="../js/eventBus.js"></script>
     <script src="../js/economyEngine.js"></script>
     <script src="../js/growthEngine.js"></script>
+    
     <script>
-        // Бэлэг илгээх
+        // --- 1. PK BATTLE STATE ---
+        let pkActive = false;
+        let scores = { left: 0, right: 0 };
+
+        // --- 2. БЭЛЭГ ИЛГЭЭХ ---
         function sendGift(name, icon, price) {
             const success = EconomyEngine.processGift({
-                user: "Намайг", streamer: "Anu_B", giftName: name, icon: icon, price: price
+                user: "Намайг", 
+                streamer: "Anu_B", 
+                giftName: name, 
+                icon: icon, 
+                price: price
             });
+
             if(success) {
-                GrowthEngine.addXP(price / 10);
+                // XP нэмэх
+                GrowthEngine.addXP(Math.floor(price / 5));
                 addChatMessage("Би", `${icon} ${name} илгээлээ!`);
+
+                // Хэрэв PK идэвхтэй бол оноо нэмэх
+                if(pkActive) {
+                    updatePKScore('left', price);
+                }
             } else {
-                alert("Токен хүрэлцэхгүй байна!");
+                alert("Токен хүрэлцэхгүй байна! Дэлгүүрээс цэнэглэнэ үү.");
             }
         }
 
-        // Mini Game Logic: Стримерээс ирэх дохиог сонсох
+        // --- 3. PK SCORE LOGIC ---
+        function updatePKScore(side, amount) {
+            scores[side] += amount;
+            const total = scores.left + scores.right;
+            const leftPercent = total === 0 ? 50 : (scores.left / total) * 100;
+
+            document.getElementById('barLeft').style.width = leftPercent + '%';
+            document.getElementById('barLeft').innerText = scores.left;
+            document.getElementById('barRight').innerText = scores.right;
+        }
+
+        // --- 4. GLOBAL EVENTS (Lucky Box & PK Start) ---
         EventBus.listen((data) => {
+            // Lucky Box гарч ирэх
             if(data.type === 'SPAWN_BOX') {
                 const box = document.getElementById('luckyBox');
-                box.style.left = Math.random() * 70 + '%';
-                box.style.top = Math.random() * 70 + '%';
+                box.style.left = (20 + Math.random() * 60) + '%';
+                box.style.top = (20 + Math.random() * 60) + '%';
                 box.style.display = 'block';
+            }
+
+            // PK эхлэх дохио (Streamer-ээс ирнэ)
+            if(data.type === 'BATTLE_STARTED') {
+                pkActive = true;
+                scores = { left: 0, right: 2500 }; // Эсрэг тал 2500 оноотой эхэллээ гэж жишээ авъя
+                document.getElementById('pkUI').style.display = 'block';
+                updatePKScore('left', 0);
             }
         });
 
+        // --- 5. MINI GAME CLAIM ---
         function claimBox() {
-            const prize = Math.floor(Math.random() * 50) + 1;
+            const prize = Math.floor(Math.random() * 100) + 10;
             EconomyEngine.updateWallet(prize);
             document.getElementById('luckyBox').style.display = 'none';
-            alert(`🎉 Баяр хүргэе! Хайрцагнаас ${prize}💎 хожлоо!`);
+            addChatMessage("System", `🎁 Баяр хүргэе! Чи хайрцагнаас ${prize}💎 хожлоо!`);
         }
 
         function addChatMessage(user, text) {
             const chat = document.getElementById('chat');
-            chat.innerHTML += `<div class="msg"><b>${user}:</b> ${text}</div>`;
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.innerHTML = `<b>${user}:</b> ${text}`;
+            chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
     </script>
