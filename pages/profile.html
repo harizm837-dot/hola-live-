@@ -2,62 +2,92 @@
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { padding: 30px; background: transparent; }
-        .profile-header {
-            display: flex; align-items: center; gap: 30px;
-            padding: 40px; border-radius: 30px; background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 242, 255, 0.1));
-            border: 1px solid var(--border); margin-bottom: 40px;
+        :root { --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; --gold: #ffcf40; --text: #eaf6ff; --border: rgba(255,255,255,0.1); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); padding: 20px; }
+        
+        .profile-card {
+            background: linear-gradient(135deg, var(--panel), #1a1f35);
+            border-radius: 30px; border: 1px solid var(--border); padding: 40px 20px;
+            text-align: center; margin-bottom: 25px; position: relative; overflow: hidden;
         }
-        .avatar-big {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: 4px solid var(--bg); box-shadow: 0 0 20px var(--primary);
-            display: flex; align-items: center; justify-content: center; font-size: 50px;
+        .profile-card::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(125, 249, 255, 0.05), transparent 70%);
+            pointer-events: none;
         }
-        .user-info h2 { font-size: 32px; font-weight: 900; margin-bottom: 5px; }
-        .user-info p { color: var(--primary); font-weight: 700; letter-spacing: 2px; }
 
-        .inventory-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;
+        .avatar-circle {
+            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px;
+            background: linear-gradient(45deg, var(--accent), #7000ff);
+            border: 4px solid var(--bg); box-shadow: 0 0 20px rgba(125, 249, 255, 0.3);
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
         }
-        .inv-item {
-            background: var(--panel); border: 1px solid var(--border);
-            padding: 20px; border-radius: 20px; text-align: center; opacity: 0.6;
+        
+        .name { font-size: 24px; font-weight: 900; margin-bottom: 5px; }
+        .rank-tag { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 20px; border: 1px solid var(--border); }
+        .stat-label { font-size: 11px; color: #8a99ad; display: block; margin-bottom: 5px; }
+        .stat-value { font-size: 18px; font-weight: 800; color: #fff; }
+
+        .vip-badge-large {
+            display: inline-block; margin-top: 15px; padding: 6px 15px; border-radius: 50px;
+            background: rgba(255, 207, 64, 0.1); color: var(--gold); border: 1px solid var(--gold);
+            font-size: 11px; font-weight: 800; display: none;
         }
-        .inv-item.active { opacity: 1; border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
     </style>
 </head>
 <body>
 
-    <div class="profile-header">
-        <div class="avatar-big">👤</div>
-        <div class="user-info">
-            <h2>User_Name</h2>
-            <p>RANK: ELITE WARRIOR</p>
+    <div class="profile-card">
+        <div class="avatar-circle">👤</div>
+        <div class="name">Хэрэглэгч</div>
+        <div class="rank-tag" id="rankName">Elite Member</div>
+        <div id="vipBadge" class="vip-badge-large">👑 VIP MEMBER</div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-label">Миний баланс</span>
+                <span class="stat-value">💎 <span id="profWallet">0</span></span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Түвшин (EXP)</span>
+                <span class="stat-value">LVL 12</span>
+            </div>
         </div>
     </div>
 
-    <h3 style="margin-bottom: 20px; font-weight: 800;">📦 Миний Эффектүүд</h3>
-    <div class="inventory-grid">
-        <div class="inv-item active">
-            <span style="font-size: 30px; display: block;">🚀</span>
-            <span style="font-size: 12px; font-weight: 800;">ROCKET ENTRY</span>
-            <div style="color: var(--gold); font-size: 10px; margin-top: 5px;">Идэвхтэй</div>
-        </div>
-        <div class="inv-item">
-            <span style="font-size: 30px; display: block;">🐉</span>
-            <span style="font-size: 12px; font-weight: 800;">DRAGON SOUL</span>
-            <div style="font-size: 10px; margin-top: 5px;">Түгжигдсэн</div>
-        </div>
-        <div class="inv-item">
-            <span style="font-size: 30px; display: block;">🏎️</span>
-            <span style="font-size: 12px; font-weight: 800;">DRIFT KING</span>
-            <div style="font-size: 10px; margin-top: 5px;">Түгжигдсэн</div>
+    <div style="background: var(--panel); border-radius: 20px; padding: 20px; border: 1px solid var(--border);">
+        <h4 style="margin: 0 0 15px 0; font-size: 15px;">Тохиргоо</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button style="background: rgba(255,255,255,0.05); border: none; padding: 12px; border-radius: 12px; color: #fff; text-align: left; font-size: 13px; cursor: pointer;">Хувийн мэдээлэл засах</button>
+            <button style="background: rgba(255,51,68,0.1); border: none; padding: 12px; border-radius: 12px; color: #ff3344; text-align: left; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="logout()">Системээс гарах</button>
         </div>
     </div>
 
+    <script>
+        function syncProfile() {
+            const wallet = localStorage.getItem('hola_wallet') || "1500";
+            document.getElementById('profWallet').innerText = parseInt(wallet).toLocaleString();
+
+            const isVIP = localStorage.getItem('is_vip') === 'true';
+            document.getElementById('vipBadge').style.display = isVIP ? 'inline-block' : 'none';
+            if(isVIP) document.getElementById('rankName').innerText = "Legendary King";
+        }
+
+        function logout() {
+            if(confirm("Та системээс гарахдаа итгэлтэй байна уу?")) {
+                localStorage.clear();
+                window.parent.location.href = 'index.html';
+            }
+        }
+
+        setInterval(syncProfile, 1000);
+        window.onload = syncProfile;
+    </script>
 </body>
 </html>
