@@ -1,0 +1,25 @@
+:root {
+    --bg: #05070f;
+    --panel: rgba(13, 18, 36, 0.95);
+    --accent: #7df9ff;
+    --gold: #ffcf40;
+    --danger: #ff3344;
+    --safe-area-top: env(safe-area-inset-top);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed; /* Гүйлгэхээс сэргийлнэ */
+    font-size: 14px; /* Утсанд тохиромжтой хэмжээ */
+}
+
+/* Mobile Responsive Utility */
+@media (max-width: 768px) {
+    :root { --sidebar-w: 0px; } /* Гар утсан дээр sidebar нуугдана */
+    .mobile-only { display: block; }
+    .desktop-only { display: none; }
+}
