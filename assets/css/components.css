@@ -1,0 +1,47 @@
+/* Logo Styling */
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(to bottom, #fff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Status Buttons */
+.btn-primary {
+    padding: 12px 24px;
+    background: var(--primary);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+/* Toast System */
+.toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translate(-50%, 100px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--primary);
+    color: white;
+    z-index: 1000;
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.toast.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
