@@ -2,67 +2,134 @@
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --danger: #ff3344; --bg: #05070f; --panel: #0d1224; --accent: #7df9ff; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: #fff; padding: 20px; }
-        
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .admin-card { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; }
-        
-        h2 { font-size: 18px; margin-top: 0; color: var(--accent); }
-        input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: #fff; margin-bottom: 15px; box-sizing: border-box; }
-        
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-bottom: 10px; }
-        .btn-add { background: var(--accent); color: #000; }
-        .btn-ban { background: var(--danger); color: #fff; }
+        :root { --bg: #0a0e1a; --panel: #161b2d; --accent: #7df9ff; --gold: #ffcf40; --danger: #ff3344; --success: #00ff88; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 20px; }
 
-        .user-list { margin-top: 20px; font-size: 13px; }
-        .user-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--danger); padding-bottom: 10px; }
+        .header h1 { font-weight: 900; font-size: 20px; color: var(--danger); margin: 0; }
+
+        .card { background: var(--panel); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        h3 { margin-top: 0; font-size: 15px; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 15px; }
+
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 12px; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--accent); }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.95); }
+
+        .btn-prime { background: var(--accent); color: #000; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-gold { background: var(--gold); color: #000; }
+
+        .status-feed { height: 150px; background: #000; border-radius: 12px; padding: 10px; font-family: monospace; font-size: 11px; overflow-y: auto; color: var(--success); border: 1px solid #222; }
     </style>
 </head>
 <body>
 
-    <h1 style="font-weight: 900; letter-spacing: -1px; margin-bottom: 30px;">🛡️ Moderator Panel</h1>
+    <div class="header">
+        <span>🛡️</span>
+        <h1>HOLA MODERATOR CONTROL</h1>
+    </div>
 
-    <div class="admin-grid">
-        <div class="admin-card">
-            <h2>💰 Баланс Удирдах</h2>
-            <input type="number" id="tokenAmount" placeholder="Токен хэмжээ...">
-            <button class="btn btn-add" onclick="addTokens()">+ Баланс Нэмэх</button>
-            <p style="font-size: 11px; opacity: 0.5;">*Энэ нь зөвхөн таны төхөөрөмж дээрх түрийвчийг өөрчилнө.</p>
+    <div class="card">
+        <h3>👤 Хэрэглэгчийн Удирдлага</h3>
+        <div class="input-group">
+            <input type="text" id="targetUser" placeholder="Хэрэглэгчийн ID (жишээ: user_777)">
+            <input type="number" id="diaAmount" placeholder="Diamond хэмжээ (+/-)">
         </div>
-
-        <div class="admin-card">
-            <h2>🚫 Хэрэглэгч Шийтгэх</h2>
-            <input type="text" id="banUser" placeholder="Хэрэглэгчийн нэр...">
-            <button class="btn btn-ban" onclick="banUser()">Хэрэглэгчийг БАНДАХ</button>
+        <div class="btn-row">
+            <button class="btn-prime" onclick="modifyDiamonds()">💰 DIAMOND НЭМЭХ</button>
+            <button class="btn-danger" onclick="banUser()">🚫 BAN ХИЙХ (30м)</button>
         </div>
     </div>
 
-    <div class="admin-card" style="margin-top: 20px;">
-        <h2>👥 Идэвхтэй үзэгчид</h2>
-        <div class="user-list">
-            <div class="user-item"><span>👤 Gamer_99</span> <span style="color:var(--accent)">VIP</span></div>
-            <div class="user-item"><span>👤 Unknown_User</span> <span>Member</span></div>
-            <div class="user-item"><span>👤 Bot_Test</span> <span>Member</span></div>
+    <div class="card">
+        <h3>📢 Систем Зарлал (All Rooms)</h3>
+        <div class="input-group">
+            <input type="text" id="globalMsg" placeholder="Бүх лайв дээр гарах текст...">
+        </div>
+        <button class="btn-gold" style="width:100%" onclick="sendGlobalAlert()">🚀 ЗАРЛАЛ ИЛГЭЭХ</button>
+    </div>
+
+    <div class="card">
+        <h3>📺 Лайв Хяналт</h3>
+        <div class="btn-row">
+            <button class="btn-prime" onclick="forceEvent('BATTLE_STARTED')">⚔️ PK ЭХЛҮҮЛЭХ</button>
+            <button class="btn-gold" onclick="forceEvent('SPAWN_BOX')">🎁 ХАЙРЦАГ ТАВИХ</button>
         </div>
     </div>
+
+    <div class="card">
+        <h3>📜 Үйл ажиллагааны бүртгэл</h3>
+        <div id="log" class="status-feed">
+            [System] Moderator panel идэвхжлээ...<br>
+        </div>
+    </div>
+
+    <script src="../js/eventBus.js"></script>
+    <script src="../js/economyEngine.js"></script>
+    <script src="../js/adminEngine.js"></script>
 
     <script>
-        function addTokens() {
-            const amount = parseInt(document.getElementById('tokenAmount').value);
-            if(!amount) return;
-            let current = parseInt(localStorage.getItem('hola_wallet')) || 0;
-            localStorage.setItem('hola_wallet', current + amount);
-            alert(amount + " токен амжилттай нэмэгдлээ!");
+        function logAction(msg) {
+            const log = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<span style="color:#666">[${time}]</span> ${msg}<br>`;
+            log.scrollTop = log.scrollHeight;
         }
 
+        // Diamond нэмэх
+        function modifyDiamonds() {
+            const user = document.getElementById('targetUser').value;
+            const amt = parseInt(document.getElementById('diaAmount').value);
+            
+            if(!user || isNaN(amt)) return alert("Мэдээллээ бүрэн бөглөнө үү!");
+
+            // Хэрэв өөрийнхөө ID-г бичсэн бол шууд economyEngine ашиглана
+            // Бусад хэрэглэгч бол App Bridge-ээр дамжина
+            EconomyEngine.updateWallet(amt);
+            logAction(`SUCCESS: ${user} руу ${amt} 💎 илгээлээ.`);
+        }
+
+        // Ban хийх
         function banUser() {
-            const user = document.getElementById('banUser').value;
-            if(!user) return;
-            alert(user + " системээс 24 цаг хөөгдлөө!");
+            const user = document.getElementById('targetUser').value;
+            if(!user) return alert("Хэрэглэгчийн ID оруул!");
+
+            AdminEngine.banUser(user, 30); // 30 минут бан
+            logAction(`BANNED: ${user} чат бичих эрх 30 мин хасагдлаа.`);
+            
+            // Бусад файлууд руу мэдээлэх
+            window.parent.postMessage({ 
+                type: 'USER_BANNED', 
+                userId: user, 
+                minutes: 30 
+            }, '*');
+        }
+
+        // Нийтийн зарлал
+        function sendGlobalAlert() {
+            const msg = document.getElementById('globalMsg').value;
+            if(!msg) return;
+
+            window.parent.postMessage({ 
+                type: 'SYSTEM_ALERT', 
+                message: msg 
+            }, '*');
+
+            logAction(`GLOBAL: "${msg}" зарлал илгээв.`);
+            document.getElementById('globalMsg').value = '';
+        }
+
+        // Лайв үйл явдал албадах
+        function forceEvent(type) {
+            window.parent.postMessage({ type: type }, '*');
+            logAction(`TRIGGER: ${type} үйл явдал эхэллээ.`);
         }
     </script>
 </body>
