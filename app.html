@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>HOLA LIVE | Master Hub</title>
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --bg: #05070f; 
+            --nav-bg: #0d1224; 
+            --accent: #00f2ff; 
+            --gold: #ffcf40;
+            --danger: #ff0055;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        body { 
+            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); 
+            color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
+        }
+
+        /* --- GLOBAL HEADER --- */
+        header { 
+            padding: calc(15px + env(safe-area-inset-top)) 20px 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(13, 18, 36, 0.95); backdrop-filter: blur(20px); z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { font-weight: 900; font-size: 24px; color: var(--accent); letter-spacing: -1.5px; }
+        
+        .hud { display: flex; gap: 10px; }
+        .hud-pill { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 800;
+            display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .hud-pill:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        #wallet-display { color: var(--gold); }
+        #lvl-display { color: var(--accent); }
+
+        /* --- VIEWPORT (IFRAME) --- */
+        #viewport { flex: 1; position: relative; width: 100%; overflow: hidden; }
+        iframe { 
+            width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            background: var(--bg);
+        }
+
+        /* --- MEGA NAVIGATION --- */
+        nav { 
+            height: 85px; background: var(--nav-bg); display: flex; 
+            align-items: center; justify-content: space-around;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+        }
+
+        .nav-link { 
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #4a546e; cursor: pointer; transition: 0.3s; flex: 1;
+            position: relative;
+        }
+
+        .nav-link.active { color: var(--accent); }
+        .nav-link.active::before {
+            content: ''; position: absolute; top: -15px; width: 20px; height: 4px;
+            background: var(--accent); border-radius: 0 0 5px 5px; box-shadow: 0 2px 10px var(--accent);
+        }
+
+        .nav-link span { font-size: 24px; transition: 0.2s; }
+        .nav-link:active span { transform: scale(1.2); }
+        .nav-link label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Notification Toast */
+        #system-toast {
+            position: fixed; top: 110px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: #000; padding: 12px 25px; border-radius: 50px;
+            font-weight: 900; font-size: 13px; z-index: 2000; display: none;
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">HOLA</div>
+        <div class="hud">
+            <div class="hud-pill" onclick="go('pages/profile.html')">
+                ⭐ <span id="lvl-display">1</span>
+            </div>
+            <div class="hud-pill" onclick="go('pages/store.html')">
+                💎 <span id="wallet-display">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div id="system-toast">Мэдэгдэл</div>
+
+    <div id="viewport">
+        <iframe id="app-frame" src="pages/home.html" allow="autoplay; camera; microphone"></iframe>
+    </div>
+
+    <nav>
+        <div class="nav-link active" onclick="tab(this, 'pages/home.html')">
+            <span>🏠</span><label>Home</label>
+        </div>
+        <div class="nav-item-live nav-link" onclick="tab(this, 'pages/live.html')">
+            <span>📺</span><label>Live</label>
+        </div>
+        <div class="nav-link" onclick="tab(this, 'pages/leaderboard.html')">
+            <span>🏆</span><label>Rank</label>
+        </div>
+        <div class="nav-link" onclick="tab(this, 'pages/store.html')">
+            <span>🛒</span><label>Store</label>
+        </div>
+        <div class="nav-link" onclick="tab(this, 'pages/vip.html')">
+            <span>👑</span><label>VIP</label>
+        </div>
+        <div class="nav-link" onclick="tab(this, 'pages/profile.html')">
+            <span>👤</span><label>Me</label>
+        </div>
+        <div class="nav-link" onclick="tab(this, 'pages/moderator.html')" style="color: var(--danger)">
+            <span>🛡️</span><label>Mod</label>
+        </div>
+    </nav>
+
+    <script src="js/eventBus.js"></script>
+    <script src="js/economyEngine.js"></script>
+    <script src="js/adminEngine.js"></script>
+    <script src="js/levelEngine.js"></script>
+    <script src="js/battleEngine.js"></script>
+    <script src="js/growthEngine.js"></script>
+    <script src="js/uiEnhance.js"></script>
+    <script src="assets/js/engine.js"></script>
+
+    <script>
+        const frame = document.getElementById('app-frame');
+        const toast = document.getElementById('system-toast');
+
+        // Navigation Logic
+        function tab(el, url) {
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            go(url);
+        }
+
+        function go(url) {
+            frame.style.opacity = '0';
+            frame.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                frame.src = url;
+                frame.style.opacity = '1';
+                frame.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        // Global UI Sync (Diamond & Level)
+        function updateHUD() {
+            const wallet = localStorage.getItem('hola_wallet') || 1500;
+            const stats = JSON.parse(localStorage.getItem('hola_user_stats')) || { level: 1 };
+            
+            document.getElementById('wallet-display').innerText = parseInt(wallet).toLocaleString();
+            document.getElementById('lvl-display').innerText = stats.level;
+        }
+
+        // --- THE MASTER BRIDGE ---
+        // Moderator хуудаснаас ирэх мессежүүдийг Live эсвэл бусад хуудас руу дамжуулах
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            console.log("App Hub Received:", data);
+
+            // 1. Стриминг команд дамжуулах (Mod -> Live)
+            const liveCommands = ['DIAMOND_RAIN', 'SPAWN_SECRET', 'START_PK', 'USER_SILENCED'];
+            if(liveCommands.includes(data.type)) {
+                if(frame.src.includes('live.html')) {
+                    frame.contentWindow.postMessage(data, '*');
+                } else {
+                    notify("Live өрөөнд команд идэвхжлээ!");
+                }
+            }
+
+            // 2. Эдийн засгийн шинэчлэлт
+            if(data.type === 'WALLET_UPDATED' || data.type === 'LEVEL_UP') {
+                updateHUD();
+            }
+
+            // 3. Battle эсвэл Growth мэдэгдэл
+            if(data.type === 'BATTLE_START') {
+                notify("⚔️ Тулаан эхэллээ!");
+            }
+        });
+
+        function notify(msg) {
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Start Sync
+        setInterval(updateHUD, 1000);
+        updateHUD();
+    </script>
+</body>
+</html>
