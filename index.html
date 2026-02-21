@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>HoLa Live | Welcome</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #030407;
+            --neon: #00f2ff;
+            --pink: #ff0055;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- Арын эффект --- */
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--neon);
+            filter: blur(150px);
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        /* --- Үсэгнүүдийн контейнер --- */
+        .title-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            gap: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(40px, 10vw, 100px);
+            font-weight: 900;
+        }
+
+        .word { display: flex; }
+
+        .letter {
+            display: inline-block;
+            opacity: 0; /* Анх харагдахгүй */
+            transform: scale(5) translate3d(var(--x), var(--y), 0);
+            filter: blur(20px);
+            animation: letterArrival 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+
+        /* Үсэг бүрийн нисэж ирэх чиглэлийг заах */
+        .l1 { --x: -100px; --y: -100px; animation-delay: 0.1s; }
+        .l2 { --x: 50px; --y: 150px; animation-delay: 0.2s; }
+        .l3 { --x: -150px; --y: 50px; animation-delay: 0.3s; }
+        .l4 { --x: 100px; --y: -150px; animation-delay: 0.4s; }
+        .l5 { --x: 200px; --y: 100px; animation-delay: 0.5s; color: var(--neon); }
+        .l6 { --x: -50px; --y: -200px; animation-delay: 0.6s; color: var(--neon); }
+        .l7 { --x: 150px; --y: -100px; animation-delay: 0.7s; color: var(--neon); }
+        .l8 { --x: -100px; --y: 100px; animation-delay: 0.8s; color: var(--neon); }
+
+        @keyframes letterArrival {
+            to {
+                opacity: 1;
+                transform: scale(1) translate3d(0, 0, 0);
+                filter: blur(0);
+            }
+        }
+
+        /* --- Товчлуур --- */
+        .enter-btn {
+            position: relative;
+            z-index: 20;
+            margin-top: 50px;
+            padding: 15px 40px;
+            background: var(--neon);
+            color: #000;
+            text-decoration: none;
+            font-weight: 900;
+            border-radius: 50px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 1.5s;
+            box-shadow: 0 0 20px var(--neon);
+            transition: 0.3s;
+        }
+
+        .enter-btn:active { transform: scale(0.9); }
+
+        /* --- Хөл хэсэг --- */
+        footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="title-container">
+        <div class="word">
+            <span class="letter l1">H</span>
+            <span class="letter l2">o</span>
+            <span class="letter l3">L</span>
+            <span class="letter l4">a</span>
+        </div>
+        <div class="word">
+            <span class="letter l5">L</span>
+            <span class="letter l6">i</span>
+            <span class="letter l7">v</span>
+            <span class="letter l8">e</span>
+        </div>
+    </div>
+
+    <a href="app.html" class="enter-btn">НЭВТРЭХ</a>
+
+    <footer>
+        2026. Hola live. Бүх эрх хуулиар хамгаалагдсан!
+    </footer>
+
+</body>
+</html>
